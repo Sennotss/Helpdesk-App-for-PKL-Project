@@ -1,0 +1,53 @@
+{
+  "menu": [
+    {
+      "url": "/",
+      "name": "Dashboards",
+      "icon": "menu-icon tf-icons bx bx-home-circle",
+      "slug": "dashboard",
+      "submenu": [
+        {
+          "url": "/",
+          "name": "Analytics",
+          "slug": "dashboard-analytics"
+        }
+      ]
+    },
+    {
+      "menuHeader": "Helpdesk"
+    },
+    {
+      "url": "/",
+      "icon": "menu-icon tf-icons bx bx-message-dots",
+      "name": "Ticket",
+      "slug": "ticket"
+    },
+    {
+      "url": "/",
+      "icon": "menu-icon tf-icons bx bx-calendar",
+      "name": "Jadwal",
+      "slug": "jadwal"
+    },
+    {
+      "menuHeader": "Master Data"
+    },
+    {
+      "url": "users",
+      "icon": "menu-icon tf-icons bx bx-user",
+      "name": "Users",
+      "slug": "users"
+    },
+    {
+      "url": "applications",
+      "icon": "menu-icon tf-icons bx bx-laptop",
+      "name": "Applications",
+      "slug": "applications"
+    },
+    {
+      "url": "problems",
+      "icon": "menu-icon tf-icons bx bx-cog",
+      "name": "Problem",
+      "slug": "problem"
+    }
+  ]
+}
