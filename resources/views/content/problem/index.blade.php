@@ -257,4 +257,5 @@
 
   })
 </script>
+@include('layouts.userAccess')
 @endsection

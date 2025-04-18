@@ -25,7 +25,8 @@
           <h4 class="mb-2">Selamat datang di {{config('variables.templateName')}}! 👋</h4>
           <p class="mb-4">Silakan masuk untuk melaporkan dan memantau kendala dengan lebih mudah.</p>
 
-          <form id="formAuthentication" class="mb-3" action="{{url('/')}}" method="GET">
+          <div id="error-message" class="alert alert-danger" style="display:none;"></div>
+          <form id="formAuthentication" class="mb-3">
             <div class="mb-3">
               <label for="username" class="form-label">Email</label>
               <input type="text" class="form-control" id="email" name="email" placeholder="Enter your email" autofocus>
@@ -59,6 +60,7 @@
 </div>
 </div>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
   $('#formAuthentication').on('submit', function (e) {
     let apiUrl = "{{config('api.base_url')}}/login";
@@ -79,8 +81,14 @@
       success: function (response) {
         localStorage.setItem('auth_token', response.access_token);
         localStorage.setItem('auth_user', JSON.stringify(response.user));
-
-        window.location.href = '/';
+        localStorage.setItem('login_success', 'true');
+        localStorage.setItem('user_role', response.user.role);
+        $.post('/store-token', {
+          _token: '{{ csrf_token() }}',
+          token: response.access_token
+        }, function () {
+          window.location.href = '/dashboard';
+        });
       },
       error: function (xhr) {
         let errMsg = 'Terjadi kesalahan saat login.';
@@ -92,4 +100,14 @@
     });
   });
 </script>
+@if(session('error'))
+<script>
+  Swal.fire({
+    icon: 'warning',
+    title: 'Akses Ditolak',
+    text: '{{ session('error') }}',
+  })
+</script>
+@endif
+
 @endsection

@@ -36,6 +36,15 @@
 
   <!-- Include Scripts -->
   @include('layouts/sections/scripts')
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const token = localStorage.getItem('auth_token');
+
+      if (!token) {
+        window.location.href = '/login';
+      }
+    });
+  </script>
 
 </body>
 

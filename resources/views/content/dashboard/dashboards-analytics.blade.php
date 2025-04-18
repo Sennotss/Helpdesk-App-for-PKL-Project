@@ -458,4 +458,18 @@
   </div>
   <!--/ Transactions -->
 </div>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+  const loginSuccess = localStorage.getItem('login_success');
+
+  if (loginSuccess === 'true') {
+    Swal.fire({
+      icon: 'success',
+      title: 'Berhasil!',
+      text: 'Login berhasil!',
+    });
+
+    localStorage.removeItem('login_success');
+  }
+</script>
 @endsection
