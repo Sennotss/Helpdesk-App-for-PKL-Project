@@ -21,30 +21,7 @@
           <th>Aksi</th>
         </tr>
       </thead>
-      <tbody class="table-border-bottom-0" id='userTable'>
-        @forelse($applications as $index => $application)
-        <tr>
-          <td>{{ $index + 1 }}</td>
-          <td>{{ $application['name'] }}</td>
-          <td>{{ $application['description'] }}</td>
-          <td>
-            @if ($application['status'] == 'active')
-              <span class="badge bg-label-primary me-1">Active</span>
-            @elseif ($application['status'] == 'maintenance')
-              <span class="badge bg-label-warning me-1">Maintenance</span>
-            @else
-              <span class="badge bg-label-danger me-1">Non Active</span>
-            @endif
-          </td>
-          <td>
-            <button type="button" class="btn btn-outline-info btn-sm" data-bs-toggle="modal" data-bs-target="#applicationEditModal" data-id="{{$application['_id']}}" id="applicationEdit"><i class="bx bx-edit-alt"></i></button>
-          </td>
-        </tr>
-        @empty
-        <tr>
-          <td colspan="5" class="text-center">Tidak ada data Aplikasi</td>
-        </tr>
-        @endforelse
+      <tbody class="table-border-bottom-0" id='applicationTable'>
       </tbody>
     </table>
   </div>
@@ -60,12 +37,14 @@
             <div class="col mb-3">
               <label for="nameBasic" class="form-label">Name</label>
               <input type="text" id="name" class="form-control" placeholder="Enter Name">
+              <div class="invalid-feedback" id="error-name"></div>
             </div>
           </div>
           <div class="row">
             <div class="col mb-3">
               <label for="description" class="form-label">Description</label>
               <textarea type="text" id="description" class="form-control"></textarea>
+              <div class="invalid-feedback" id="error-description"></div>
             </div>
           </div>
         </div>
@@ -76,6 +55,7 @@
       </div>
     </div>
   </div>
+  @include('components.loading')
   <div class="modal fade" id="applicationEditModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
@@ -94,13 +74,15 @@
           <div class="row">
             <div class="col mb-3">
               <label for="nameBasic" class="form-label">Name</label>
-              <input type="text" id="editName" class="form-control" placeholder="Enter Name">
+              <input type="text" id="editAppName" class="form-control" placeholder="Enter Name">
+              <div class="invalid-feedback" id="error-edit-name"></div>
             </div>
           </div>
           <div class="row">
             <div class="col mb-3">
               <label for="description" class="form-label">Description</label>
-              <textarea type="text" id="editDescription" class="form-control"></textarea>
+              <textarea type="text" id="editAppDescription" class="form-control"></textarea>
+              <div class="invalid-feedback" id="error-edit-description"></div>
             </div>
           </div>
           <div class="row">
@@ -112,6 +94,7 @@
                 <option value="non active">Non Active</option>
                 <option value="maintenance">Maintenance</option>
               </select>
+              <div class="invalid-feedback" id="error-edit-status"></div>
             </div>
           </div>
         </div>
@@ -125,20 +108,58 @@
 </div>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-  $('document').ready(function(){
+  $(document).ready(function(){
+    $('#loading').show();
     let apiUrl = "{{config('api.base_url')}}/applications";
+    $.ajax({
+    url: apiUrl,
+    method: 'GET',
+    success: function (data) {
+      console.log(data)
+      $('#loading').hide();
+      let html = '';
+      if (data.length === 0) {
+        html = `<tr><td colspan="6" class="text-center">Tidak ada data Aplikasi</td></tr>`;
+      } else {
+        data.forEach((application, index) => {
+          let statusBadge = '';
 
-    // CREATE DATA
+          if(application.status === 'active') {
+            statusBadge = '<span class="badge bg-label-primary me-1">Active</span>';
+          } else if (application.status === 'nonactive') {
+            statusBadge = '<span class="badge bg-label-danger me-1">Non Active</span>';
+          } else if (application.status === 'maintenance') {
+            statusBadge = '<span class="badge bg-label-warning me-1">Maintenance</span>';
+          } else {
+            statusBadge = '<span class="badge bg-label-secondary me-1">Unknown</span>';
+          }
+
+          html += `
+            <tr>
+              <td>${index + 1}</td>
+              <td>${application.name}</td>
+              <td>${application.description}</td>
+              <td>${statusBadge}</td>
+              <td>
+                <button type="button" class="btn btn-outline-info btn-sm" data-bs-toggle="modal" data-bs-target="#applicationEditModal" class='applicationEdit' data-id="${ application.id }" id="applicationEdit"><i class="bx bx-edit-alt"></i></button>
+              </td>
+            </tr>`;
+        });
+      }
+
+      $('#applicationTable').html(html);
+    },
+    error: function (xhr) {
+      console.error(xhr.responseText);
+      Swal.fire('Error', 'Gagal memuat data aplikasi.', 'error');
+    }
+  });
+
     $("#saveApplication").click(function (e) {
       e.preventDefault();
 
       let name = $("#name").val();
       let description = $("#description").val();
-
-      // if (!name || !email || !password || !role) {
-      //   alert("Semua field harus diisi!");
-      //   return;
-      // }
 
       $.ajax({
         url: apiUrl,
@@ -146,82 +167,144 @@
         contentType: "application/json",
         data: JSON.stringify({
           name: name,
-          description: description
+          description: description,
         }),
         success: function (response) {
-          alert(response.message);
           $("#applicationModal").modal("hide");
-          location.reload();
+          Swal.fire({
+            icon: 'success',
+            title: 'Berhasil!',
+            text: response.message,
+          }).then(() => location.reload());
         },
-        error: function (xhr, status, error) {
-          console.error("Error Response:", xhr);
-          alert("Error: " + xhr.status + " - " + xhr.responseText);
+        error: function (xhr) {
+        if (xhr.status === 422) {
+          const res = xhr.responseJSON;
+          const errors = res.errors;
+
+          for (const field in errors) {
+            $(`#${field}`).addClass('is-invalid');
+            $(`#error-${field}`).text(errors[field][0]);
+          }
+
+          $('#applicationModal').modal('show');
+        } else {
+          Swal.fire({
+            icon: 'error',
+            title: 'Gagal!',
+            text: xhr.responseText,
+          });
+        }
+      }
+      });
+    });
+
+    $(document).on('click', '#applicationEdit', function () {
+      let appId = $(this).data('id');
+      $.ajax({
+        url: apiUrl + '/' + appId,
+        method: 'GET',
+        success: function (response) {
+          const application = response.data;
+
+          $('#editAppId').val(application.id);
+          $('#editAppName').val(application.name);
+          $('#editAppDescription').val(application.description);
+          $('#editAppStatus').val(application.status);
+
+          $('#applicationEditModal').modal('show');
+        },
+        error: function () {
+          Swal.fire('Error', 'Gagal mengambil data aplikasi.', 'error');
         }
       });
     });
 
-    $(document).on("click", "#applicationEdit", function () {
-      let appId = $(this).data("id");
-      console.log('id:' + appId)
+    $("#saveApplicationEdit").click(function (e) {
+      e.preventDefault();
 
-      if (!appId) {
-          alert("Gagal mendapatkan ID Aplikasi!");
-          return;
-      }
+      const appId = $("#editAppId").val();
+      const name = $("#editAppName").val();
+      const description = $("#editAppDescription").val();
+      const status = $("#editAppStatus").val();
 
       $.ajax({
-          url: apiUrl + '/' + appId,
-          type: "GET",
-          success: function (response) {
-              console.log("Aplikasi Data:", response);
+        url: apiUrl + '/' + appId,
+        type: "PUT",
+        contentType: "application/json",
+        data: JSON.stringify({
+          name: name,
+          description: description,
+          status: status
+        }),
+        success: function (response) {
+          $("#applicationEditModal").modal("hide");
+          Swal.fire({
+            icon: 'success',
+            title: 'Berhasil!',
+            text: response.message,
+            confirmButtonText: 'OK'
+          }).then(() =>
+          $('#loading').show(),
+          location.reload());
+        },
+        error: function (xhr) {
+          if (xhr.status === 422) {
+            const res = xhr.responseJSON;
+            const errors = res.errors;
 
-              $("#editAppId").val(appId);
-              $("#editName").val(response.name);
-              $("#editDescription").val(response.description);
-              $("#editAppStatus").val(response.status);
+            for (const field in errors) {
+              $(`#editApp${field.charAt(0).toUpperCase() + field.slice(1)}`).addClass('is-invalid');
+              $(`#error-edit-${field}`).text(errors[field][0]);
+            }
 
-              $("#applicationEditModal").modal("show");
-          },
-          error: function (xhr) {
-              alert("Gagal mengambil data: " + xhr.responseText);
+            $('#applicationEditModal').modal('show');
+          } else {
+            Swal.fire({
+              icon: 'error',
+              title: 'Gagal!',
+              text: xhr.responseText,
+            });
           }
+        }
       });
     });
 
-    // UPDATE DATA
-    $(document).on("click", "#saveApplicationEdit", function () {
-      let appId = $("#editAppId").val();
-      let name = $("#editName").val();
-      let description = $("#editDescription").val();
-      let status = $("#editAppStatus").val();
+    // $(document).on('click', '#userDelete', function () {
+    //   let userId = $(this).data('id');
+    //   Swal.fire({
+    //       title: 'Apakah Anda yakin?',
+    //       text: 'Data pengguna ini akan dihapus!',
+    //       icon: 'warning',
+    //       showCancelButton: true,
+    //       confirmButtonText: 'Hapus',
+    //       cancelButtonText: 'Batal'
+    //   }).then((result) => {
+    //       if (result.isConfirmed) {
+    //           $.ajax({
+    //               url: apiUrl + '/' + userId,
+    //               type: 'DELETE',
+    //               success: function () {
+    //                 Swal.fire({
+    //                     title: 'Dihapus!',
+    //                     text: 'Data pengguna telah dihapus.',
+    //                     icon: 'success',
+    //                     allowOutsideClick: false,
+    //                     confirmButtonText: 'OK'
+    //                 }).then(() => {
+    //                     $('#loading').show(),
+    //                     location.reload();
+    //                 });
 
-      console.log("appId :" + appId);
+    //               },
+    //               error: function () {
+    //                   Swal.fire('Error', 'Gagal menghapus data pengguna.', 'error');
+    //               }
+    //           });
+    //       }
+    //   });
+    // });
 
-      // if (!userId || !name || !email || !role || !status) {
-      //     alert("Semua field harus diisi!");
-      //     return;
-      // }
-
-      $.ajax({
-          url: apiUrl + '/' + appId,
-          type: "PUT",
-          contentType: "application/json",
-          data: JSON.stringify({
-              name: name,
-              description: description,
-              status: status
-          }),
-          success: function (response) {
-              alert(response.message);
-              $("#editApplicationModal").modal("hide");
-              location.reload();
-          },
-          error: function (xhr) {
-              console.error("Error:", xhr);
-              alert("Gagal mengupdate data: " + xhr.responseText);
-          }
-      });
-    });
   })
 </script>
 @endsection

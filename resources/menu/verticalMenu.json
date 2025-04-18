@@ -46,8 +46,8 @@
     {
       "url": "problems",
       "icon": "menu-icon tf-icons bx bx-cog",
-      "name": "Problem",
-      "slug": "problem"
+      "name": "Problems",
+      "slug": "problems"
     }
   ]
 }

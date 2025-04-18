@@ -62,7 +62,7 @@
               <select class="form-select" id="role" aria-label="Default select example">
                 <option selected>Pilih Role</option>
                 <option value="admin">Admin</option>
-                <option value="client">Client</option>
+                <option value="user">User</option>
               </select>
               <div class="invalid-feedback" id="error-role"></div>
             </div>
@@ -94,12 +94,14 @@
             <div class="col mb-3">
               <label for="nameBasic" class="form-label">Name</label>
               <input type="text" id="editUserName" class="form-control"">
+              <div class="invalid-feedback" id="error-edit-name"></div>
             </div>
           </div>
           <div class="row">
             <div class="col mb-3">
               <label for="email" class="form-label">Email</label>
               <input type="email" id="editUserEmail" class="form-control">
+              <div class="invalid-feedback" id="error-edit-email"></div>
             </div>
           </div>
           <div class="row">
@@ -108,8 +110,9 @@
               <select class="form-select" id="editUserRole" aria-label="Default select example">
                 <option value=''>Pilih Role</option>
                 <option value="admin">Admin</option>
-                <option value="client">Client</option>
+                <option value="user">User</option>
               </select>
+              <div class="invalid-feedback" id="error-edit-role"></div>
             </div>
           </div>
           <div class="row">
@@ -120,6 +123,7 @@
                 <option value="active">Active</option>
                 <option value="non active">Non Active</option>
               </select>
+              <div class="invalid-feedback" id="error-edit-status"></div>
             </div>
           </div>
         </div>
@@ -271,7 +275,7 @@
             icon: 'success',
             title: 'Berhasil!',
             text: response.message,
-            confirmButtonText: 'OK' 
+            confirmButtonText: 'OK'
           }).then(() =>
           $('#loading').show(),
           location.reload());

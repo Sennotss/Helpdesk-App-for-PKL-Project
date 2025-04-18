@@ -16,3 +16,11 @@ Route::get('users', function () {
   return view('content.users.index');
 })->name('users');
 
+Route::get('applications', function () {
+  return view('content.aplications.index');
+})->name('applications');
+
+Route::get('problems', function () {
+  return view('content.problem.index');
+})->name('problems');
+

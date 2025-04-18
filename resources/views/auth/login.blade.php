@@ -27,8 +27,8 @@
 
           <form id="formAuthentication" class="mb-3" action="{{url('/')}}" method="GET">
             <div class="mb-3">
-              <label for="username" class="form-label">Username</label>
-              <input type="text" class="form-control" id="username" name="username" placeholder="Enter your username" autofocus>
+              <label for="username" class="form-label">Email</label>
+              <input type="text" class="form-control" id="email" name="email" placeholder="Enter your email" autofocus>
             </div>
             <div class="mb-3 form-password-toggle">
               <div class="d-flex justify-content-between">
@@ -58,4 +58,38 @@
   </div>
 </div>
 </div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  $('#formAuthentication').on('submit', function (e) {
+    let apiUrl = "{{config('api.base_url')}}/login";
+    e.preventDefault();
+
+    const email = $('#email').val();
+    const password = $('#password').val();
+
+    $.ajax({
+      url: apiUrl,
+      method: 'POST',
+      contentType: 'application/json',
+      dataType: 'json',
+      data: JSON.stringify({
+        email: email,
+        password: password
+      }),
+      success: function (response) {
+        localStorage.setItem('auth_token', response.access_token);
+        localStorage.setItem('auth_user', JSON.stringify(response.user));
+
+        window.location.href = '/';
+      },
+      error: function (xhr) {
+        let errMsg = 'Terjadi kesalahan saat login.';
+        if (xhr.responseJSON && xhr.responseJSON.message) {
+          errMsg = xhr.responseJSON.message;
+        }
+        $('#error-message').text(errMsg).show();
+      }
+    });
+  });
+</script>
 @endsection

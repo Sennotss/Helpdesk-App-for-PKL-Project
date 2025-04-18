@@ -1,8 +1,11 @@
   <?php
 
+  use App\Http\Controllers\Api\ProblemController;
   use Illuminate\Http\Request;
   use Illuminate\Support\Facades\Route;
   use App\Http\Controllers\Api\UserController;
+  use App\Http\Controllers\Api\ApplicationController;
+
 
   /*
   |--------------------------------------------------------------------------
@@ -24,3 +27,13 @@
   Route::get('users/{id_user}', [UserController::class,'show'])->name('getDataById');
   Route::PUT('users/{id_user}', [UserController::class,'update'])->name('putData');
   Route::DELETE('users/{id_user}', [UserController::class,'destroy'])->name('deleteData');
+
+  Route::get('applications', [ApplicationController::class,'index'])->name('getApp');
+  Route::post('applications', [ApplicationController::class,'store'])->name('postApp');
+  Route::get('applications/{id_application}', [ApplicationController::class,'show'])->name('getAppById');
+  Route::PUT('applications/{id_application}', [ApplicationController::class,'update'])->name('putApp');
+
+  Route::get('problems', [ProblemController::class,'index'])->name('getApp');
+  Route::post('problems', [ProblemController::class,'store'])->name('postApp');
+  Route::get('problems/{id_problem}', [ProblemController::class,'show'])->name('getAppById');
+  Route::PUT('problems/{id_problem}', [ProblemController::class,'update'])->name('putApp');
