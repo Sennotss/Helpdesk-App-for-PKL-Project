@@ -1,0 +1,109 @@
+<?php
+
+namespace App\Http\Controllers\Api;
+
+use App\Helpers\ApiResponse;
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use App\Models\Ticket;
+use App\Models\TicketImages;
+use App\Models\TicketLinks;
+use Illuminate\Support\Facades\Validator;
+
+class TicketController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     */
+    public function index()
+    {
+        $tickets = Ticket::with(['images', 'links', 'user', 'problem', 'application'])->get();
+
+        return ApiResponse::success($tickets);
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request)
+    {
+      $validator = Validator::make($request->all(), [
+        'problem_id' => 'nullable|exists:problems,id',
+        'application_id' => 'nullable|exists:applications,id',
+        'client' => 'nullable|string',
+        'issue' => 'required|string',
+        'description' => 'required|string',
+        'assigned_to' => 'nullable|exists:users,id',
+        'priority' => 'required|in:low,middle,high',
+        'via' => 'nullable|string',
+        'images.*' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+        'links' => 'nullable|array',
+        'links.*' => 'url'
+      ]);
+
+      if ($validator->fails()) {
+          return response()->json(['errors' => $validator->errors()], 422);
+      }
+
+      $ticket = Ticket::create([
+          'problem_id' => $request->problem_id,
+          'application_id' => $request->application_id,
+          'user_id' => auth()->id(),
+          'client' => $request->client,
+          'issue' => $request->issue,
+          'description' => $request->description,
+          'status' => 'open',
+          'assigned_to' => $request->assigned_to,
+          'priority' => $request->priority,
+          'via' => $request->via ?? 'web',
+      ]);
+
+      if ($request->hasFile('images')) {
+          foreach ($request->file('images') as $image) {
+              $path = $image->store('ticket_images', 'public');
+              TicketImages::create([
+                  'ticket_id' => $ticket->id,
+                  'path' => $path
+              ]);
+          }
+      }
+
+      if ($request->links) {
+          foreach ($request->links as $link) {
+              TicketLinks::create([
+                  'ticket_id' => $ticket->id,
+                  'url' => $link
+              ]);
+          }
+      }
+
+      return response()->json([
+          'message' => 'Tiket berhasil dibuat.',
+          'ticket' => $ticket->load(['images', 'links'])
+      ], 201);
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(string $id)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, string $id)
+    {
+        //
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(string $id)
+    {
+        //
+    }
+}

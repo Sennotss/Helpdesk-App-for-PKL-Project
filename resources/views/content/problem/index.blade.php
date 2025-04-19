@@ -81,11 +81,22 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
   $(document).ready(function(){
+    const authToken = localStorage.getItem('auth_token');
+
+    function addAuthorizationHeader(xhr) {
+        if (authToken) {
+            xhr.setRequestHeader('Authorization', 'Bearer ' + authToken);
+        }
+    }
+
     $('#loading').show();
     let apiUrl = "{{config('api.base_url')}}/problems";
     $.ajax({
     url: apiUrl,
     method: 'GET',
+    beforeSend: function(xhr){
+      addAuthorizationHeader(xhr)
+    },
     success: function (data) {
       console.log(data)
       $('#loading').hide();
@@ -121,6 +132,9 @@
       $.ajax({
         url: apiUrl,
         type: "POST",
+        beforeSend: function(xhr){
+          addAuthorizationHeader(xhr)
+        },
         contentType: "application/json",
         data: JSON.stringify({
           name: name,
@@ -160,6 +174,9 @@
       $.ajax({
         url: apiUrl + '/' + problemId,
         method: 'GET',
+        beforeSend: function(xhr){
+          addAuthorizationHeader(xhr)
+        },
         success: function (response) {
           const problem = response.data;
 
@@ -184,6 +201,9 @@
         url: apiUrl + '/' + problemId,
         type: "PUT",
         contentType: "application/json",
+        beforeSend: function(xhr){
+          addAuthorizationHeader(xhr)
+        },
         data: JSON.stringify({
           name: name,
         }),

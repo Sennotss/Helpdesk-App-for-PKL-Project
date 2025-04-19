@@ -69,6 +69,7 @@ class Kernel extends HttpKernel
 
   protected $routeMiddleware = [
     'check.token' => \App\Http\Middleware\CheckToken::class,
+    'auth' => \App\Http\Middleware\Authenticate::class,
   ];
 
 }

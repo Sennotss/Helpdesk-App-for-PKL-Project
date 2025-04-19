@@ -6,6 +6,7 @@
   use Illuminate\Support\Facades\Route;
   use App\Http\Controllers\Api\UserController;
   use App\Http\Controllers\Api\ApplicationController;
+  use App\Http\Controllers\Api\TicketController;
 
 
   /*
@@ -23,6 +24,12 @@
   Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::middleware('role:admin')->group(function () {
+        Route::get('users', [UserController::class,'index'])->name('getData');
+        Route::post('users', [UserController::class,'store'])->name('postData');
+        Route::get('users/{id_user}', [UserController::class,'show'])->name('getDataById');
+        Route::PUT('users/{id_user}', [UserController::class,'update'])->name('putData');
+        Route::DELETE('users/{id_user}', [UserController::class,'destroy'])->name('deleteData');
+
         Route::get('/users', [UserController::class, 'index']);
         Route::get('applications', [ApplicationController::class,'index'])->name('getApp');
         Route::post('applications', [ApplicationController::class,'store'])->name('postApp');
@@ -44,9 +51,5 @@
 });
 
 
-  Route::get('users', [UserController::class,'index'])->name('getData');
-  Route::post('users', [UserController::class,'store'])->name('postData');
-  Route::get('users/{id_user}', [UserController::class,'show'])->name('getDataById');
-  Route::PUT('users/{id_user}', [UserController::class,'update'])->name('putData');
-  Route::DELETE('users/{id_user}', [UserController::class,'destroy'])->name('deleteData');
-
+Route::get('tickets', [TicketController::class,'index'])->name('getTickets');
+Route::post('tickets', [TicketController::class,'store'])->name('postTickets  ');

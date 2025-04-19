@@ -18,7 +18,8 @@ Route::post('/store-token', function (Request $request) {
 Route::middleware(['check.token'])->group(function () {
   Route::get('/dashboard', function () {
       return view('content.dashboard.dashboards-analytics');
-  });
+  })->name('dashboard');
+
   Route::get('users', function () {
     return view('content.users.index');
   })->name('users');

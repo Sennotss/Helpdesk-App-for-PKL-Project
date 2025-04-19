@@ -25,6 +25,12 @@ class User extends Authenticatable
         'status',
     ];
 
+    public function tickets()
+    {
+        return $this->hasMany(Ticket::class);
+    }
+
+
     /**
      * The attributes that should be hidden for serialization.
      *

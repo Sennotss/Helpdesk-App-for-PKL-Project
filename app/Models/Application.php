@@ -14,4 +14,9 @@ class Application extends Model
       "description",
       "status",
     ] ;
+    
+    public function tickets()
+    {
+        return $this->hasMany(Ticket::class);
+    }
 }

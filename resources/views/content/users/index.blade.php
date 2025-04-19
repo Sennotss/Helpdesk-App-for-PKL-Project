@@ -139,11 +139,21 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
   $(document).ready(function(){
+    const authToken = localStorage.getItem('auth_token');
+
+    function addAuthorizationHeader(xhr) {
+        if (authToken) {
+            xhr.setRequestHeader('Authorization', 'Bearer ' + authToken);
+        }
+    }
     $('#loading').show();
     let apiUrl = "{{config('api.base_url')}}/users";
     $.ajax({
     url: apiUrl,
     method: 'GET',
+    beforeSend: function(xhr){
+      addAuthorizationHeader(xhr)
+    },
     success: function (data) {
       console.log(data)
       $('#loading').hide();
@@ -192,6 +202,9 @@
         url: apiUrl,
         type: "POST",
         contentType: "application/json",
+        beforeSend: function(xhr){
+          addAuthorizationHeader(xhr)
+        },
         data: JSON.stringify({
           name: name,
           email: email,
@@ -233,6 +246,9 @@
       $.ajax({
         url: apiUrl + '/' + userId,
         method: 'GET',
+        beforeSend: function(xhr){
+          addAuthorizationHeader(xhr)
+        },
         success: function (response) {
           const user = response.data;
 
@@ -263,6 +279,9 @@
         url: apiUrl + '/' + userId,
         type: "PUT",
         contentType: "application/json",
+        beforeSend: function(xhr){
+          addAuthorizationHeader(xhr)
+        },
         data: JSON.stringify({
           name: name,
           email: email,
@@ -316,6 +335,9 @@
               $.ajax({
                   url: apiUrl + '/' + userId,
                   type: 'DELETE',
+                  beforeSend: function(xhr){
+                    addAuthorizationHeader(xhr)
+                  },
                   success: function () {
                     Swal.fire({
                         title: 'Dihapus!',
@@ -325,7 +347,9 @@
                         confirmButtonText: 'OK'
                     }).then(() => {
                         $('#loading').show(),
-                        location.reload();
+                        setTimeout(() => {
+                          location.reload();
+                        }, 1000);
                     });
 
                   },

@@ -5,16 +5,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Problem extends Model
+class TicketImages extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-      "name",
-    ] ;
+      'ticket_id',
+      'image_path'
+    ];
 
-    public function tickets()
+    public function ticket()
     {
-        return $this->hasMany(Ticket::class);
+        return $this->belongsTo(Ticket::class);
     }
 }
