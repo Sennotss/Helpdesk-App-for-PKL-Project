@@ -1,0 +1,248 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Task Detail</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+  />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap"
+    rel="stylesheet"
+  />
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f0f8fa;
+    }
+    .priority-badge {
+      background-color: #22c55e;
+      color: white;
+      font-weight: 600;
+      font-size: 13px;
+      padding: 0.25rem 0.75rem;
+      border-radius: 0.375rem;
+      user-select: none;
+    }
+    .status-late {
+      background-color: #f9d9db;
+      color: #db2f4d;
+      font-weight: 600;
+      font-size: 11px;
+      padding: 0.15rem 0.5rem;
+      border-radius: 0.375rem;
+      user-select: none;
+    }
+    .status-open {
+      background-color: #5c22d7;
+      color: white;
+      font-weight: 600;
+      font-size: 11px;
+      padding: 0.15rem 0.5rem;
+      border-radius: 0.375rem;
+      user-select: none;
+    }
+    .btn-review {
+      background-color: #f0b06a;
+      color: white;
+      font-weight: 600;
+      font-size: 13px;
+    }
+    .btn-review:hover {
+      background-color: #e0a35a;
+      color: white;
+    }
+    .btn-confirmation {
+      background-color: #f0b06a;
+      background-color: rgba(240, 176, 106, 0.4);
+      color: white;
+      font-weight: 600;
+      font-size: 13px;
+      pointer-events: none;
+      cursor: default;
+    }
+    .btn-progress {
+      background-color: #e3863a;
+      color: white;
+      font-weight: 600;
+      font-size: 13px;
+      pointer-events: none;
+      cursor: default;
+    }
+    .nav-tabs .nav-link {
+      font-size: 13px;
+      font-weight: 600;
+      color: #6b7280;
+      padding-bottom: 0.25rem;
+    }
+    .nav-tabs .nav-link.active {
+      color: black;
+      border-color: transparent transparent #c18f4f transparent;
+      border-bottom-width: 2px;
+      font-weight: 600;
+    }
+    .toolbar select,
+    .toolbar button {
+      font-size: 13px;
+      color: #4b5563;
+      background: white;
+      border: 1px solid #d1d5db;
+      border-radius: 0.25rem;
+      padding: 0.15rem 0.5rem;
+      margin-right: 0.25rem;
+    }
+    .toolbar button.font-bold {
+      font-weight: 700;
+      color: black;
+      background: none;
+      border: none;
+      padding: 0 0.25rem;
+    }
+    .toolbar button.font-italic {
+      font-style: italic;
+      color: #4b5563;
+      background: none;
+      border: none;
+      padding: 0 0.25rem;
+    }
+    .toolbar button:hover {
+      color: black;
+    }
+    textarea.form-control {
+      font-size: 13px;
+      color: #6b7280;
+      resize: none;
+      height: 160px;
+    }
+    .text-label {
+      color: #6b7280;
+      font-size: 14px;
+    }
+    .text-muted-custom {
+      color: #9ca3af !important;
+      font-size: 11px;
+    }
+    .text-small-black {
+      font-size: 14px;
+      color: black;
+    }
+    .icon-sm {
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container py-4">
+    <div class="row g-4">
+      <!-- Left main content -->
+      <div class="col-lg-8">
+        <!-- Task info card -->
+        <div class="bg-white rounded-3 p-4 shadow-sm">
+          <div class="d-flex justify-content-between align-items-start">
+            <div>
+              <p class="text-nowrap text-muted" style="color:#c18f4f; font-size:13px; margin-bottom:0.25rem;">silteung Aplikasi Internal</p>
+              <h1 class="fw-semibold mb-1" style="font-size:1.25rem; line-height:1.2;">free fire</h1>
+              <p class="text-muted mb-3" style="font-size:14px; color:#6b7280;">#49806</p>
+              <span class="priority-badge">Prioritas Rendah</span>
+            </div>
+            <p class="text-muted-custom mb-0">Dibuat pada 2025-01-14 16:52</p>
+          </div>
+          <div class="row mt-4 g-3 text-black fw-normal" style="font-size:14px;">
+            <div class="col-12 col-sm-6 d-flex align-items-center text-label">
+              <i class="far fa-clock icon-sm me-2"></i>
+              <span>Status</span>
+              <span class="status-late ms-2">Terlambat</span>
+              <span class="status-open ms-1">Open</span>
+            </div>
+            <div class="col-12 col-sm-6 d-flex align-items-center text-label">
+              <i class="far fa-clock icon-sm me-2"></i>
+              <span>Durasi</span>
+              <span class="ms-2 fw-semibold text-black">8 Jam</span>
+            </div>
+            <div class="col-12 col-sm-6 d-flex align-items-center text-label">
+              <i class="far fa-calendar-alt icon-sm me-2"></i>
+              <span>Batas Waktu</span>
+              <span class="ms-2 text-black">Selasa, 14 Januari 2025 00:00:00</span>
+            </div>
+            <div class="col-12 col-sm-6 d-flex align-items-center text-label">
+              <i class="far fa-user icon-sm me-2"></i>
+              <span>Penerima Tugas</span>
+              <span class="ms-2 text-black">test pegawai 1</span>
+            </div>
+            <div class="col-12 col-sm-6 d-flex align-items-center text-label">
+              <i class="far fa-user icon-sm me-2"></i>
+              <span>Pengulas</span>
+              <span class="ms-2 text-black">pegawai 14</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Discussion card -->
+        <div class="bg-white rounded-3 p-3 shadow-sm mt-4">
+          <ul class="nav nav-tabs border-0 mb-3" role="tablist" style="font-size:13px; font-weight:600;">
+            <li class="nav-item" role="presentation">
+              <button class="nav-link active" id="diskusi-tab" data-bs-toggle="tab" data-bs-target="#diskusi" type="button" role="tab" aria-controls="diskusi" aria-selected="true" style="border-color: transparent transparent #c18f4f transparent;">Diskusi</button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" id="subtugas-tab" data-bs-toggle="tab" data-bs-target="#subtugas" type="button" role="tab" aria-controls="subtugas" aria-selected="false">Sub Tugas</button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" id="filetugas-tab" data-bs-toggle="tab" data-bs-target="#filetugas" type="button" role="tab" aria-controls="filetugas" aria-selected="false">File Tugas</button>
+            </li>
+          </ul>
+          <div class="border rounded-2">
+            <div class="d-flex align-items-center border-bottom px-3 py-1 bg-white text-secondary" style="font-size:13px;">
+              <select aria-label="Paragraph style" class="form-select form-select-sm me-2" style="width: 110px; font-size:13px;">
+                <option>Paragraph</option>
+              </select>
+              <button type="button" class="btn btn-link p-0 me-2 text-secondary" aria-label="Text color" title="Text color">
+                <i class="fas fa-t"></i><i class="fas fa-caret-down ms-1"></i>
+              </button>
+              <button type="button" class="btn btn-link p-0 me-2 fw-bold text-black font-bold" aria-label="Bold" title="Bold">B</button>
+              <button type="button" class="btn btn-link p-0 me-2 fst-italic text-secondary font-italic" aria-label="Italic" title="Italic">I</button>
+              <button type="button" class="btn btn-link p-0 me-2 text-secondary" aria-label="Link" title="Link">
+                <i class="fas fa-link"></i>
+              </button>
+              <button type="button" class="btn btn-link p-0 me-2 text-secondary" aria-label="Image" title="Image">
+                <i class="far fa-image"></i><i class="fas fa-caret-down ms-1"></i>
+              </button>
+              <button type="button" class="btn btn-link p-0 me-2 text-secondary" aria-label="Undo" title="Undo">
+                <i class="fas fa-undo"></i>
+              </button>
+              <button type="button" class="btn btn-link p-0 text-secondary" aria-label="Redo" title="Redo">
+                <i class="fas fa-redo"></i>
+              </button>
+            </div>
+            <textarea class="form-control border-0" placeholder="Type here ..." aria-label="Discussion text area"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right sidebar -->
+      <div class="col-lg-4 d-flex flex-column gap-3">
+        <div class="bg-white rounded-3 p-3 shadow-sm d-flex flex-column gap-2">
+          <button type="button" class="btn btn-review d-flex align-items-center justify-content-center gap-2 w-100">
+            <i class="fas fa-search"></i>
+            <span>Review</span>
+          </button>
+          <button type="button" class="btn btn-confirmation d-flex align-items-center justify-content-center gap-2 w-100" disabled>
+            <i class="fas fa-check"></i>
+            <span>Konfirmasi</span>
+          </button>
+          <button type="button" class="btn btn-progress d-flex align-items-center justify-content-center gap-2 w-100" disabled>
+            <i class="fas fa-spinner fa-spin"></i>
+            <span>Dalam Progres</span>
+          </button>
+        </div>
+        <div class="bg-white rounded-3 p-3 shadow-sm" style="min-height:120px;">
+          <h2 class="fw-semibold mb-0" style="font-size:14px; color:black;">Aktivitas</h2>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

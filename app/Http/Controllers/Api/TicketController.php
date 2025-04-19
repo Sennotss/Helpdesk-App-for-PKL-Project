@@ -59,14 +59,15 @@ class TicketController extends Controller
       ]);
 
       if ($request->hasFile('images')) {
-          foreach ($request->file('images') as $image) {
-              $path = $image->store('ticket_images', 'public');
-              TicketImages::create([
-                  'ticket_id' => $ticket->id,
-                  'path' => $path
-              ]);
-          }
+        foreach ($request->file('images') as $image) {
+            $path = $image->store('ticket_images', 'public');
+            TicketImages::create([
+                'ticket_id' => $ticket->id,
+                'image_path' => $path
+            ]);
+        }
       }
+    
 
       if ($request->links) {
           foreach ($request->links as $link) {
@@ -86,10 +87,23 @@ class TicketController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show($ticket_code)
     {
-        //
+      try {
+          $ticket = Ticket::with(['images', 'links', 'user', 'problem', 'application'])
+              ->where('ticket_code', $ticket_code)
+              ->first();
+
+          if (!$ticket) {
+              return ApiResponse::notFound('Ticket Not Found');
+          }
+
+          return ApiResponse::success($ticket, "Data " . $ticket_code . " berhasil diambil", 200);
+      } catch (\Exception $e) {
+          return ApiResponse::error('Internal Server Error: ' . $e->getMessage());
+      }
     }
+
 
     /**
      * Update the specified resource in storage.

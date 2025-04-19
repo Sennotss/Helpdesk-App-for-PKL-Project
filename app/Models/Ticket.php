@@ -28,11 +28,11 @@ class Ticket extends Model
 
         static::creating(function ($ticket) {
             $latest = self::latest()->first();
-            $number = $latest && preg_match('/CMP(\d+)/', $latest->ticket_code, $matches)
+            $number = $latest && preg_match('/#CMP(\d+)/', $latest->ticket_code, $matches)
                 ? intval($matches[1]) + 1
                 : 1;
 
-            $ticket->ticket_code = 'CMP' . str_pad($number, 5, '0', STR_PAD_LEFT);
+            $ticket->ticket_code = '#CMP' . str_pad($number, 5, '0', STR_PAD_LEFT);
         });
     }
 

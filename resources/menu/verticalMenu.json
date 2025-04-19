@@ -17,10 +17,10 @@
       "menuHeader": "Helpdesk"
     },
     {
-      "url": "/",
+      "url": "tickets",
       "icon": "menu-icon tf-icons bx bx-message-dots",
-      "name": "Ticket",
-      "slug": "ticket"
+      "name": "Tickets",
+      "slug": "tickets"
     },
     {
       "url": "/",
