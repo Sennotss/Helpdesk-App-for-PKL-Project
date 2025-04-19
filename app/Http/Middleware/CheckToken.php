@@ -15,11 +15,11 @@ class CheckToken
      */
     public function handle($request, Closure $next)
     {
-        if (!session()->has('auth_token')) {
-            return redirect('/login')->with('error', 'Silakan login terlebih dahulu.');
-        }
+      if (!session()->has('auth_token')) {
+          return redirect('/login')->with('error', 'Silakan login terlebih dahulu.');
+      }
 
-        return $next($request);
+      return $next($request);
     }
 
 }

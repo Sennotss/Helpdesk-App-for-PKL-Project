@@ -36,7 +36,7 @@
 
   <!-- Include Scripts -->
   @include('layouts/sections/scripts')
-  <script>
+  {{-- <script>
     document.addEventListener("DOMContentLoaded", function () {
       const token = localStorage.getItem('auth_token');
 
@@ -45,7 +45,7 @@
       }
     });
 
-  </script>
+  </script> --}}
 
 </body>
 
