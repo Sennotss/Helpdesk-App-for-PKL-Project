@@ -29,20 +29,16 @@
       <div class="d-flex align-items-end row">
         <div class="col-sm-12">
           <div class="card-header d-flex justify-content-between">
-            <h5 class="mb-0 text-wrap" style="max-width: 60%;">{{$ticket->issue}}</h5>
+            <div class="d-flex" style="flex-grow: 1;">
+              <a class="btn btn-close" href="{{ route('tickets') }}"></a>
+              <h5 class="mb-0 ms-2 text-wrap" style="max-width: calc(80% - 50px); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{$ticket->issue}}</h5>
+            </div>
             <span class="text-muted fs-6">Created at : {{$ticket->created_at}}</span>
           </div>
           <div class="card-body">
             <div class="row my-3">
               <div class="col-sm-3 d-flex align-items-center fs-5 gap-3">
                 <span>{{ $ticket->ticket_code }}</span>
-                @if ($ticket->priority === 'low')
-                  <span class="badge text-bg-success small-badge">Low</span>
-                @elseif ($ticket->priority === 'middle')
-                  <span class="badge badge-lg text-bg-warning">Middle</span>
-                @elseif ($ticket->priority === 'high')
-                  <span class="badge badge-lg text-bg-danger">High</span>
-                @endif
               </div>
             </div>
             <div class="row my-3">
@@ -55,8 +51,8 @@
                   <span class="badge badge-lg bg-label-primary">Open</span>
                 @elseif ($ticket->status === 'onprogress')
                   <span class="badge badge-lg bg-label-warning">On Progress</span>
-                @elseif ($ticket->status === 'done')
-                  <span class="badge badge-lg bg-label-success">On Progress</span>
+                @elseif ($ticket->status === 'resolved')
+                  <span class="badge badge-lg bg-label-success">Resolved</span>
                 @elseif ($ticket->status === 'revisi')
                   <span class="badge badge-lg bg-label-danger">On Progress</span>
                 @endif
@@ -118,6 +114,20 @@
               </div>
             </div>
             <div class="row my-3">
+              <div class="col-sm-3 d-flex text-muted"  style="flex-shrink: 0;">
+                <i class="bx bx-user me-3"></i>
+                <span>Priority</span>
+              </div>
+              <div class="col-sm-8">
+                <select id="priority" name="priority" class="form-select form-select-sm border-0 p-0 custom-select">
+                  <option value="">Pilih Prioritas</option>
+                  <option value="low" {{ (old('priority', $ticket->priority ?? '') == 'low') ? 'selected' : '' }}>Low</option>
+                  <option value="middle" {{ (old('priority', $ticket->priority ?? '') == 'middle') ? 'selected' : '' }}>Middle</option>
+                  <option value="high" {{ (old('priority', $ticket->priority ?? '') == 'high') ? 'selected' : '' }}>High</option>
+                </select>
+              </div>
+            </div>
+            <div class="row my-3">
               <div class="col-sm-3 d-flex text-muted" style="flex-shrink: 0;">
                 <i class="bx bx-image me-3"></i>
                 <span>Images</span>
@@ -147,7 +157,7 @@
                 @endforelse
               </div>
             </div>
-          </div>  
+          </div>
         </div>
       </div>
     </div>
@@ -156,47 +166,34 @@
     <div class="bg-white rounded-3 p-3 shadow-sm d-flex flex-column gap-2">
       <div class="d-flex justify-content-between gap-2">
         <!-- Button untuk Review -->
-        <button type="button" class="btn d-flex align-items-center justify-content-center gap-2 w-100 
-          @if ($ticket->status === 'open') 
-            btn-primary 
-          @elseif ($ticket->status === 'onprogress') 
-            btn-outline-warning 
-          @else 
-            btn-secondary 
-          @endif">
+        <button type="button" id="btnReview"
+          class="btn d-flex align-items-center justify-content-center gap-2 w-100
+            {{ $ticket->status === 'open' ? 'btn-primary' : ($ticket->status === 'onprogress' ? 'btn-primary' : 'btn-primary') }}"
+          {{ ($ticket->status === 'open' || $ticket->status === 'resolved') ? 'disabled' : '' }}>
           <i class="fas fa-search"></i>
           <span>Review</span>
         </button>
-    
-        <!-- Button untuk Konfirmasi -->
-        <button type="button" class="btn d-flex align-items-center justify-content-center gap-2 w-100 
-          @if ($ticket->status === 'open') 
-            btn-primary 
-          @elseif ($ticket->status === 'onprogress') 
-            btn-outline-warning 
-          @else 
-            btn-secondary 
-          @endif">
+
+        <!-- Tombol Konfirmasi -->
+        <button type="button" id="btnKonfirmasi"
+          class="btn d-flex align-items-center justify-content-center gap-2 w-100
+            {{ $ticket->status === 'open' ? 'btn-primary' : ($ticket->status === 'onprogress' ? 'btn-primary' : 'btn-primary') }}"
+          {{ ($ticket->status === 'open' || $ticket->status === 'resolved') ? 'disabled' : '' }}>
           <i class="fas fa-check"></i>
           <span>Konfirmasi</span>
         </button>
+
       </div>
-    
-      <!-- Button untuk Dalam Progres -->
-      <button type="button" class="btn d-flex align-items-center justify-content-center gap-2 w-100 
-        @if ($ticket->status === 'open') 
-          btn-primary 
-        @elseif ($ticket->status === 'onprogress') 
-          btn-warning 
-        @else 
-          btn-secondary 
-        @endif">
-        <i class="fas fa-spinner fa-spin"></i>
-        <span>Dalam Progres</span>
-      </button>
+        <!-- Tombol Dalam Progres -->
+        <button type="button" id="btnProgress"
+          class="btn d-flex align-items-center justify-content-center gap-2 w-100
+            {{ $ticket->status === 'open' ? 'btn-primary' : ($ticket->status === 'onprogress' ? 'btn-primary' : 'btn-primary') }}"
+          {{($ticket->status === 'onprogress' || $ticket->status === 'resolved') ? 'disabled' : '' }}>
+          <i class="fas fa-spinner fa-spin"></i>
+          <span>Dalam Progres</span>
+        </button>
     </div>
-    
-    
+
     <div class="bg-white rounded-3 p-3 shadow-sm" style="min-height:120px;">
       <h2 class="fw-semibold mb-3" style="font-size:14px; color:black;">Description</h2>
       <span>{{$ticket->description}}</span>
@@ -216,11 +213,84 @@
     </div>
   </div>
 </div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
   document.querySelectorAll('.image-link').forEach(link => {
     link.addEventListener('click', function () {
       const imageUrl = this.getAttribute('data-image');
       document.getElementById('modalImage').setAttribute('src', imageUrl);
+    });
+  });
+
+  const authToken = localStorage.getItem('auth_token');
+
+  function addAuthorizationHeader(xhr) {
+      if (authToken) {
+          xhr.setRequestHeader('Authorization', 'Bearer ' + authToken);
+      }
+  }
+
+  $('#btnProgress').on('click', function () {
+    const assignedTo = $('#assigned_to').val();
+    const applicationId = $('#application_id').val();
+    const problemId = $('#problem_id').val();
+    const priority = $('#priority').val();
+    let apiUrl = "{{config('api.base_url')}}/tickets";
+    const ticketCode = encodeURIComponent("{{$ticket->ticket_code}}");
+
+    $.ajax({
+      url: apiUrl + "/" + ticketCode,
+      method: 'PUT',
+      beforeSend: function(xhr){
+        addAuthorizationHeader(xhr)
+      },
+      data: {
+        status: 'onprogress',
+        assigned_to: assignedTo,
+        application_id: applicationId,
+        problem_id: problemId,
+        priority: priority
+      },
+      success: function (response) {
+        console.log('Update berhasil:', response);
+        location.reload();
+      },
+      error: function (xhr) {
+        console.error('Gagal update:', xhr.responseText);
+        alert('Gagal mengupdate tiket. Cek console untuk detail.');
+      }
+    });
+  });
+
+  $('#btnKonfirmasi').on('click', function () {
+    const assignedTo = $('#assigned_to').val();
+    const applicationId = $('#application_id').val();
+    const problemId = $('#problem_id').val();
+    const priority = $('#priority').val();
+    let apiUrl = "{{config('api.base_url')}}/tickets";
+    const ticketCode = encodeURIComponent("{{$ticket->ticket_code}}");
+
+    $.ajax({
+      url: apiUrl + "/" + ticketCode,
+      method: 'PUT',
+      beforeSend: function(xhr){
+        addAuthorizationHeader(xhr)
+      },
+      data: {
+        status: 'resolved',
+        assigned_to: assignedTo,
+        application_id: applicationId,
+        problem_id: problemId,
+        priority: priority
+      },
+      success: function (response) {
+        console.log('Update berhasil:', response);
+        location.reload();
+      },
+      error: function (xhr) {
+        console.error('Gagal update:', xhr.responseText);
+        alert('Gagal mengupdate tiket. Cek console untuk detail.');
+      }
     });
   });
 </script>

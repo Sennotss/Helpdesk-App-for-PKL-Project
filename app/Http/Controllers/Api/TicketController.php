@@ -34,7 +34,7 @@ class TicketController extends Controller
         'issue' => 'required|string',
         'description' => 'required|string',
         'assigned_to' => 'nullable|exists:users,id',
-        'priority' => 'required|in:low,middle,high',
+        'priority' => 'nullable|in:low,middle,high',
         'via' => 'nullable|string',
         'images.*' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         'links' => 'nullable|array',
@@ -67,7 +67,7 @@ class TicketController extends Controller
             ]);
         }
       }
-    
+
 
       if ($request->links) {
           foreach ($request->links as $link) {
@@ -108,9 +108,31 @@ class TicketController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function updateTicket(Request $request, $ticket_code)
     {
-        //
+      $validator = Validator::make($request->all(), [
+        'status' => 'nullable|in:open,onprogress,resolved',
+        'assigned_to' => 'nullable|exists:users,id',
+        'application_id' => 'nullable|exists:applications,id',
+        'problem_id' => 'nullable|exists:problems,id',
+        'priority' => 'nullable|in:low,middle,high',
+      ]);
+
+      if ($validator->fails()) {
+        return response()->json(['errors' => $validator->errors()], 422);
+      }
+
+      $ticket = Ticket::where('ticket_code', $ticket_code)->firstOrFail();
+
+      $ticket->update([
+          'status' => $request->status,
+          'assigned_to' => $request->assigned_to,
+          'application_id' => $request->application_id,
+          'problem_id' => $request->problem_id,
+          'priority' => $request->priority,
+      ]);
+
+      return ApiResponse::success($ticket, 'Data berhasil diupdate');
     }
 
     /**

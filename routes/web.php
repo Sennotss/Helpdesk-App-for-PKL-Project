@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\dashboard\Analytics;
 use App\Http\Controllers\LoginController;
-use App\Http\Controllers\TicketController;
+use App\Http\Controllers\TicketWebController;
 use Illuminate\Http\Request;
 
 Route::get('/login', [
@@ -37,7 +37,7 @@ Route::middleware(['check.token'])->group(function () {
     return view('content.tickets.index');
   })->name('tickets');
 
-  Route::get('tickets/detail/{ticket_code}', [TicketController::class, 'show'])->name('ticket');
+  Route::get('tickets/detail/{ticket_code}', [TicketWebController::class, 'show'])->name('ticket');
 });
 
 

@@ -8,7 +8,7 @@
   <div class="card-header d-flex justify-content-between align-items-center">
     {{-- <div class="demo-inline-spacing"> --}}
       <h5>Data Tickets</h5>
-      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#userModal">Add Data</button>
+      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ticketModal">Add Data</button>
   </div>
   <div class="table-responsive text-nowrap">
     <table class="table table-striped">
@@ -27,109 +27,59 @@
     </table>
   </div>
   @include('components.loading')
-  <div class="modal fade" id="userModal" tabindex="-1" aria-hidden="true">
+  <div class="modal fade" id="ticketModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel1">Add Data Users<h5>
+          <h5 class="modal-title" id="exampleModalLabel1">Add Tickets<h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
           <div class="row">
-            <div class="col mb-3">
-              <label for="nameBasic" class="form-label">Name</label>
-              <input type="text" id="name" class="form-control" placeholder="Enter Name">
-              <div class="invalid-feedback" id="error-name"></div>
+            <div class="col-md-6 mb-3">
+              <label for="client" class="form-label">Client</label>
+              <input type="text" id="client" class="form-control" placeholder="Enter Client">
+              <div class="invalid-feedback" id="error-client"></div>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="issue" class="form-label">Issue</label>
+              <input type="text" id="issue" class="form-control" placeholder="Enter Issue">
+              <div class="invalid-feedback" id="error-issue"></div>
             </div>
           </div>
           <div class="row">
             <div class="col mb-3">
-              <label for="email" class="form-label">Email</label>
-              <input type="email" id="email" class="form-control" placeholder="Enter Email">
+              <label for="email" class="form-label">Description</label>
+              <textarea type="text" id="description" class="form-control"></textarea>
               <div class="invalid-feedback" id="error-email"></div>
             </div>
           </div>
           <div class="row">
             <div class="col mb-3">
-              <label for="password" class="form-label">Password</label>
-              <input type="password" id="password" class="form-control" placeholder="Enter Password">
-              <div class="invalid-feedback" id="error-password"></div>
+              <label class="form-label">Upload Gambar</label>
+              <div id="image-wrapper">
+                <input type="file" name="images[]" class="form-control mb-2" accept="image/*">
+              </div>
+              <button type="button" class="btn btn-sm btn-outline-primary" onclick="addImage()">+ Tambah Gambar</button>
+              <div class="invalid-feedback" id="error-images"></div>
             </div>
           </div>
           <div class="row">
             <div class="col mb-3">
-              <label for="exampleFormControlSelect1" class="form-label">Role</label>
-              <select class="form-select" id="role" aria-label="Default select example">
-                <option selected>Pilih Role</option>
-                <option value="admin">Admin</option>
-                <option value="user">User</option>
-              </select>
-              <div class="invalid-feedback" id="error-role"></div>
+              <label for="links" class="form-label">Links Terkait</label>
+              <div id="link-wrapper">
+                <div class="input-group mb-2">
+                  <input type="url" name="links[]" class="form-control" placeholder="Enter link">
+                  <button type="button" class="btn btn-outline-primary" onclick="addLinkInput()">+</button>
+                </div>
+              </div>
+              <div class="invalid-feedback" id="error-links"></div>
             </div>
           </div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
           <button type="button" class="btn btn-primary" id='saveUser'>Save changes</button>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="modal fade" id="userEditModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel1">Edit Data Users<h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <input type="hidden" id="editUserId">
-          {{-- <div class="row">
-            <div class="col mb-3">
-              <label for="id" class="form-label">ID</label>
-              <input type="number" id="editUserId" class="form-control" readonly>
-            </div>
-          </div> --}}
-          <div class="row">
-            <div class="col mb-3">
-              <label for="nameBasic" class="form-label">Name</label>
-              <input type="text" id="editUserName" class="form-control"">
-              <div class="invalid-feedback" id="error-edit-name"></div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col mb-3">
-              <label for="email" class="form-label">Email</label>
-              <input type="email" id="editUserEmail" class="form-control">
-              <div class="invalid-feedback" id="error-edit-email"></div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col mb-3">
-              <label for="exampleFormControlSelect1" class="form-label">Role</label>
-              <select class="form-select" id="editUserRole" aria-label="Default select example">
-                <option value=''>Pilih Role</option>
-                <option value="admin">Admin</option>
-                <option value="user">User</option>
-              </select>
-              <div class="invalid-feedback" id="error-edit-role"></div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col mb-3">
-              <label for="exampleFormControlSelect1" class="form-label">Status</label>
-              <select class="form-select" id="editUserStatus" aria-label="Default select example">
-                <option selected>Pilih Status</option>
-                <option value="active">Active</option>
-                <option value="non active">Non Active</option>
-              </select>
-              <div class="invalid-feedback" id="error-edit-status"></div>
-            </div>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary" id='saveUserEdit'>Save changes</button>
         </div>
       </div>
     </div>
@@ -169,8 +119,8 @@
             statusBadge = '<span class="badge bg-label-primary me-1">Open</span>';
           } else if (ticket.status === 'onprogress') {
             statusBadge = '<span class="badge bg-label-warning me-1">On Progress</span>';
-          } else if (ticket.status === 'done') {
-            statusBadge = '<span class="badge bg-label-success me-1">done</span>';
+          } else if (ticket.status === 'resolved') {
+            statusBadge = '<span class="badge bg-label-success me-1">Resolved</span>';
           } else if (ticket.status === 'revition') {
             statusBadge = '<span class="badge bg-label-danger me-1">Revisi</span>';
           } else {
@@ -218,8 +168,89 @@
       }
     });
   });
+    $(document).on('click', '#saveUser', function (e) {
+      e.preventDefault();
 
+      let formData = new FormData();
+
+      formData.append("client", $("#client").val());
+      formData.append("issue", $("#issue").val());
+      formData.append("description", $("#description").val());
+
+      $("input[name='images[]']").each(function () {
+        const files = $(this)[0].files;
+        if (files.length > 0) {
+          formData.append("images[]", files[0]);
+        }
+      });
+
+      $("input[name='links[]']").each(function () {
+        const link = $(this).val();
+        if (link) {
+          formData.append("links[]", link);
+        }
+      });
+
+      $.ajax({
+        url: apiUrl,
+        type: "POST",
+        processData: false,
+        contentType: false,
+        data: formData,
+        beforeSend: function (xhr) {
+          addAuthorizationHeader(xhr)
+        },
+        success: function (response) {
+          $("#userModal").modal("hide");
+          Swal.fire({
+            icon: 'success',
+            title: 'Berhasil!',
+            text: response.message,
+          }).then(() => location.reload());
+        },
+        error: function (xhr) {
+          if (xhr.status === 422) {
+            const res = xhr.responseJSON;
+            const errors = res.errors;
+
+            for (const field in errors) {
+              $(`#${field}`).addClass('is-invalid');
+              $(`#error-${field}`).text(errors[field][0]);
+            }
+
+            $('#userModal').modal('show');
+          } else {
+            Swal.fire({
+              icon: 'error',
+              title: 'Gagal!',
+              text: xhr.responseText,
+            });
+          }
+        }
+      });
+    });
   })
+
+  function addImage() {
+    const wrapper = document.getElementById('image-wrapper');
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.name = 'images[]';
+    input.className = 'form-control mb-2';
+    input.accept = 'image/*';
+    wrapper.appendChild(input);
+  }
+
+  function addLinkInput() {
+    const wrapper = document.getElementById('link-wrapper');
+    const newInput = document.createElement('div');
+    newInput.classList.add('input-group', 'mb-2');
+    newInput.innerHTML = `
+      <input type="url" name="links[]" class="form-control" placeholder="Enter link">
+      <button type="button" class="btn btn-outline-danger" onclick="this.parentNode.remove()">-</button>
+    `;
+    wrapper.appendChild(newInput);
+  }
 </script>
 {{-- @include('layouts.userAccess'); --}}
 

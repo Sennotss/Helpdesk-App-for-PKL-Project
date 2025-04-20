@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('client')->nullable();
             $table->string('issue');
             $table->text('description');
-            $table->enum('status', ['open', 'onprogress', 'done'])->default('open');
+            $table->enum('status', ['open', 'onprogress', 'resolved', 'revition'])->default('open');
             $table->unsignedBigInteger('assigned_to')->nullable();
             $table->enum('priority', ['low', 'middle', 'high']);
             $table->string('via')->default('web');

@@ -52,6 +52,6 @@
     Route::get('tickets', [TicketController::class,'index'])->name('getTickets');
     Route::post('tickets', [TicketController::class,'store'])->name('postTickets');
     Route::get('tickets/{ticket_code}', [TicketController::class, 'show'])->name('getTicketById');
+    Route::PUT('tickets/{ticket_code}', [TicketController::class, 'updateTicket'])->name('putTicket');
 });
-
 

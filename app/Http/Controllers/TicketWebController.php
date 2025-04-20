@@ -10,7 +10,7 @@ use App\Models\Application;
 use App\Models\TicketImages;
 use App\Models\TicketLinks;
 
-class TicketController extends Controller
+class TicketWebController extends Controller
 {
   public function show($ticket_code)
   {
