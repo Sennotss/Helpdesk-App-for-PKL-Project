@@ -138,8 +138,28 @@ class TicketController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function notifyTelegram($id)
     {
-        //
+        $tiket = Ticket::findOrFail($id);
+
+        $token = config('services.telegram.bot_token');
+        $chat_id = config('services.telegram.chat_id');
+
+        $response = Http::post("https://api.telegram.org/bot{$token}/sendMessage", [
+            'chat_id' => $chat_id,
+            'text' => "
+              *Tiket Baru Masuk!*
+              Client: {$tiket->client}
+              Issue: {$tiket->issue}
+              Keterangan: {$tiket->description}
+              Tanggal: " . now()->format('d M Y H:i'),
+            'parse_mode' => 'Markdown'
+        ]);
+
+        return response()->json([
+            'status' => 'success',
+            'telegram_response' => $response->json()
+        ]);
     }
+
 }

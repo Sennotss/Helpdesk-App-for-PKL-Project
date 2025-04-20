@@ -7,6 +7,8 @@
   use App\Http\Controllers\Api\UserController;
   use App\Http\Controllers\Api\ApplicationController;
   use App\Http\Controllers\Api\TicketController;
+  use App\Http\Controllers\Api\TelegramWebhookController;
+  use App\Http\Controllers\Api\DiscussionController;
 
 
   /*
@@ -41,6 +43,8 @@
         Route::get('problems/{id_problem}', [ProblemController::class,'show'])->name('getAppById');
         Route::PUT('problems/{id_problem}', [ProblemController::class,'update'])->name('putApp');
 
+        Route::get('tickets/{ticket_id}/discussions', [DiscussionController::class, 'index']);
+        Route::post('tickets/{ticket_id}/discussions', [DiscussionController::class, 'store']);
       });
 
       Route::middleware('role:user')->group(function () {
@@ -53,5 +57,8 @@
     Route::post('tickets', [TicketController::class,'store'])->name('postTickets');
     Route::get('tickets/{ticket_code}', [TicketController::class, 'show'])->name('getTicketById');
     Route::PUT('tickets/{ticket_code}', [TicketController::class, 'updateTicket'])->name('putTicket');
-});
+    Route::post('/tickets/{id}/notify-telegram', [TicketController::class, 'notifyTelegram']);
 
+  });
+
+  Route::post('/telegram/webhook', [TelegramWebhookController::class, 'handle']);

@@ -13,6 +13,7 @@ class Ticket extends Model
       "problem_id",
       "application_id",
       "user_id",
+      "pelapor_id",
       "client",
       "issue",
       "description",
@@ -65,5 +66,4 @@ class Ticket extends Model
     {
         return $this->hasMany(TicketLinks::class);
     }
-
 }

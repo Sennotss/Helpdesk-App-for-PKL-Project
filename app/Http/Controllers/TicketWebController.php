@@ -22,11 +22,13 @@ class TicketWebController extends Controller
     $applications = Application::all();
     $images = TicketImages::all();
     $links = TicketLinks::all();
+    $discussions = $ticket->discussions;
+
     if (!$ticket) {
         return view('content.tickets.index');
     }
 
     // Render tampilan Blade dengan data tiket
-    return view('content.tickets.detail', compact('ticket', 'users', 'problems', 'applications', 'images', 'links'));
+    return view('content.tickets.detail', compact('ticket', 'users', 'problems', 'applications', 'images', 'links', 'discussions'));
   }
 }

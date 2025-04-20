@@ -161,6 +161,36 @@
         </div>
       </div>
     </div>
+    <div class="chat-container p-4 bg-light rounded shadow">
+      @foreach ($discussions as $discussion)
+          @if ($discussion->sender_id === auth()->user()->id)
+              {{-- Pesan dari pengguna --}}
+              <div class="chat-bubble chat-right mb-2">
+                  <div class="bubble bg-primary text-white">
+                      {{ $discussion->message }}
+                  </div>
+                  <small class="text-muted d-block text-end">{{ $discussion->created_at->diffForHumans() }}</small>
+              </div>
+          @else
+              {{-- Pesan dari tim IT atau orang lain --}}
+              <div class="chat-bubble chat-left mb-2">
+                  <div class="bubble bg-secondary text-white">
+                      {{ $discussion->message }}
+                  </div>
+                  <small class="text-muted d-block text-start">{{ $discussion->created_at->diffForHumans() }}</small>
+              </div>
+          @endif
+      @endforeach
+
+      {{-- Form kirim pesan --}}
+      <form id="discussion-form" class="d-flex mt-3">
+          @csrf
+          <input type="hidden" name="ticket_id" value="{{ $ticket->id }}">
+          <input type="text" name="message" class="form-control me-2" placeholder="Tulis pesan..." required>
+          <button type="submit" class="btn btn-primary">Kirim</button>
+      </form>
+    </div>
+
   </div>
   <div class="col-lg-4 d-flex flex-column gap-3">
     <div class="bg-white rounded-3 p-3 shadow-sm d-flex flex-column gap-2">

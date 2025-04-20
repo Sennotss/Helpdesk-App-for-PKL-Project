@@ -17,6 +17,7 @@ return new class extends Migration
             $table->unsignedBigInteger('problem_id')->nullable();
             $table->unsignedBigInteger('application_id')->nullable();
             $table->unsignedBigInteger('user_id')->nullable();
+            $table->string('pelapor_id')->nullable();
             $table->string('client')->nullable();
             $table->string('issue');
             $table->text('description');
