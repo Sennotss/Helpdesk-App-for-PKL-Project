@@ -9,6 +9,7 @@ use App\Models\Problem;
 use App\Models\Application;
 use App\Models\TicketImages;
 use App\Models\TicketLinks;
+use App\Models\Discussion;
 
 class TicketWebController extends Controller
 {
@@ -22,7 +23,7 @@ class TicketWebController extends Controller
     $applications = Application::all();
     $images = TicketImages::all();
     $links = TicketLinks::all();
-    $discussions = $ticket->discussions;
+    $discussions = Discussion::where('ticket_code', $ticket->ticket_code)->get();
 
     if (!$ticket) {
         return view('content.tickets.index');

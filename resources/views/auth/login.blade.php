@@ -85,7 +85,8 @@
         localStorage.setItem('user_role', response.user.role);
         $.post('/store-token', {
           _token: '{{ csrf_token() }}',
-          token: response.access_token
+          token: response.access_token,
+          user: response.user
         }, function () {
           window.location.href = '/dashboard';
         });

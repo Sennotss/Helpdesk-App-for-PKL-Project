@@ -4,19 +4,20 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Discussions;
+use App\Models\Discussion;
 
 class DiscussionController extends Controller
 {
     public function store(Request $request)
     {
         $request->validate([
-            'ticket_id' => 'required|exists:tickets,id',
+            'ticket_code' => 'required|exists:tickets,ticket_code',
             'message' => 'required|string',
         ]);
 
-        $discussion = Discussions::create([
-            'ticket_id' => $request->ticket_id,
+
+        $discussion = Discussion::create([
+            'ticket_code' => $request->ticket_code,
             'user_id' => auth()->id(),
             'message' => $request->message,
         ]);
@@ -27,10 +28,10 @@ class DiscussionController extends Controller
         ]);
     }
 
-    public function index($ticket_id)
+    public function index($ticket_code)
     {
-        return Discussions::with('user')
-            ->where('ticket_id', $ticket_id)
+        return Discussion::with('user')
+            ->where('ticket_code', $ticket_code)
             ->orderBy('created_at')
             ->get();
     }

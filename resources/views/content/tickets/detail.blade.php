@@ -161,35 +161,40 @@
         </div>
       </div>
     </div>
-    <div class="chat-container p-4 bg-light rounded shadow">
+    <div class="chat-container mt-3 p-4 bg-light rounded shadow">
+      <h3><i class='bx bx-chat'  style='font-size: 1em;'></i> Discussion Chat</h3>
+      @php
+        $authUser = session('auth_user');
+      @endphp
+
       @foreach ($discussions as $discussion)
-          @if ($discussion->sender_id === auth()->user()->id)
-              {{-- Pesan dari pengguna --}}
-              <div class="chat-bubble chat-right mb-2">
-                  <div class="bubble bg-primary text-white">
-                      {{ $discussion->message }}
+          @if ($authUser && $discussion->user_id == $authUser['id'])
+              {{-- Pesan dari user yang sedang login (kanan) --}}
+              <div class="chat-message-wrapper flex-grow-1 text-end">
+                  <div class="chat-message-text bg-primary text-white p-2 rounded d-inline-block">
+                      <p class="mb-0">{{ $discussion->message }}</p>
                   </div>
-                  <small class="text-muted d-block text-end">{{ $discussion->created_at->diffForHumans() }}</small>
+                  <small class="text-muted d-block">{{ $discussion->created_at->diffForHumans() }}</small>
               </div>
           @else
-              {{-- Pesan dari tim IT atau orang lain --}}
-              <div class="chat-bubble chat-left mb-2">
-                  <div class="bubble bg-secondary text-white">
-                      {{ $discussion->message }}
+              {{-- Pesan dari orang lain (kiri) --}}
+              <div class="chat-message-wrapper flex-grow-1 text-start">
+                  <div class="chat-message-text bg-primary text-white p-2 rounded d-inline-block">
+                      <p class="mb-0">{{ $discussion->message }}</p>
                   </div>
-                  <small class="text-muted d-block text-start">{{ $discussion->created_at->diffForHumans() }}</small>
+                  <small class="text-muted d-block">{{ $discussion->user->name }} - {{ $discussion->created_at->diffForHumans() }}</small>
               </div>
           @endif
       @endforeach
 
-      {{-- Form kirim pesan --}}
+
       <form id="discussion-form" class="d-flex mt-3">
           @csrf
-          <input type="hidden" name="ticket_id" value="{{ $ticket->id }}">
+          <input type="hidden" name="ticket_code" value="{{ $ticket->ticket_code }}">
           <input type="text" name="message" class="form-control me-2" placeholder="Tulis pesan..." required>
           <button type="submit" class="btn btn-primary">Kirim</button>
       </form>
-    </div>
+  </div>
 
   </div>
   <div class="col-lg-4 d-flex flex-column gap-3">
@@ -320,6 +325,32 @@
       error: function (xhr) {
         console.error('Gagal update:', xhr.responseText);
         alert('Gagal mengupdate tiket. Cek console untuk detail.');
+      }
+    });
+  });
+
+  $('#discussion-form').on('submit', function (e) {
+    e.preventDefault();
+
+    const formData = $(this).serialize();
+    const ticketCode = encodeURIComponent("{{$ticket->ticket_code}}");
+    const apiUrl = `{{ config('api.base_url') }}/tickets/${ticketCode}/discussions`;
+    console.log(apiUrl);
+
+    $.ajax({
+      url: apiUrl,
+      method: 'POST',
+      beforeSend: function(xhr) {
+        addAuthorizationHeader(xhr)
+      },
+      data: formData,
+      success: function(response) {
+        console.log('Diskusi ditambahkan:', response);
+        location.reload();
+      },
+      error: function(xhr) {
+        console.error('Gagal menambahkan diskusi:', xhr.responseText);
+        alert('Gagal mengirim pesan.');
       }
     });
   });

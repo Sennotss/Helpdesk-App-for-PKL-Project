@@ -43,22 +43,22 @@
         Route::get('problems/{id_problem}', [ProblemController::class,'show'])->name('getAppById');
         Route::PUT('problems/{id_problem}', [ProblemController::class,'update'])->name('putApp');
 
-        Route::get('tickets/{ticket_id}/discussions', [DiscussionController::class, 'index']);
-        Route::post('tickets/{ticket_id}/discussions', [DiscussionController::class, 'store']);
       });
 
       Route::middleware('role:user')->group(function () {
         // Route::get('/profile', function (Request $request) {
-        //   return $request->user();
-        // });
-      });
+          //   return $request->user();
+          // });
+        });
 
-    Route::get('tickets', [TicketController::class,'index'])->name('getTickets');
-    Route::post('tickets', [TicketController::class,'store'])->name('postTickets');
-    Route::get('tickets/{ticket_code}', [TicketController::class, 'show'])->name('getTicketById');
-    Route::PUT('tickets/{ticket_code}', [TicketController::class, 'updateTicket'])->name('putTicket');
-    Route::post('/tickets/{id}/notify-telegram', [TicketController::class, 'notifyTelegram']);
+        Route::get('tickets', [TicketController::class,'index'])->name('getTickets');
+        Route::post('tickets', [TicketController::class,'store'])->name('postTickets');
+        Route::get('tickets/{ticket_code}', [TicketController::class, 'show'])->name('getTicketById');
+        Route::PUT('tickets/{ticket_code}', [TicketController::class, 'updateTicket'])->name('putTicket');
+        Route::post('/tickets/{id}/notify-telegram', [TicketController::class, 'notifyTelegram']);
 
+        Route::get('tickets/{ticket_code}/discussions', [DiscussionController::class, 'index']);
+        Route::post('tickets/{ticket_code}/discussions', [DiscussionController::class, 'store']);
   });
 
   Route::post('/telegram/webhook', [TelegramWebhookController::class, 'handle']);

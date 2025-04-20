@@ -66,4 +66,10 @@ class Ticket extends Model
     {
         return $this->hasMany(TicketLinks::class);
     }
+
+    public function discussion()
+    {
+        return $this->hasMany(Discussion::class);
+    }
+
 }
