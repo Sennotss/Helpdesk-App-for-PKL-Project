@@ -36,6 +36,9 @@
             <span class="text-muted fs-6">Created at : {{$ticket->created_at}}</span>
           </div>
           <div class="card-body">
+            @php
+              $isAdmin = session('auth_user')['role'] === 'admin';
+            @endphp
             <div class="row my-3">
               <div class="col-sm-3 d-flex align-items-center fs-5 gap-3">
                 <span>{{ $ticket->ticket_code }}</span>
@@ -53,14 +56,14 @@
                   <span class="badge badge-lg bg-label-warning">On Progress</span>
                 @elseif ($ticket->status === 'resolved')
                   <span class="badge badge-lg bg-label-success">Resolved</span>
-                @elseif ($ticket->status === 'revisi')
-                  <span class="badge badge-lg bg-label-danger">On Progress</span>
+                @elseif ($ticket->status === 'revition')
+                  <span class="badge badge-lg bg-label-danger">Revisi</span>
                 @endif
               </div>
             </div>
             <div class="row my-3">
               <div class="col-sm-3 d-flex align-items-center text-muted">
-                <i class="bx bx-user me-3"></i>
+                <i class="bx bxs-factory me-3"></i>
                 <span>Client</span>
               </div>
               <div class="col-sm-8">
@@ -77,54 +80,77 @@
                 <span>Assigned By</span>
               </div>
               <div class="col-sm-8">
-                <select id="assigned_to" class="form-select form-select form-select-sm border-0 p-0 custom-select">
-                  <option value="">Select a user</option>
-                  @foreach ($users as $user)
-                    <option value="{{ $user->id }}" {{ $ticket->assigned_to == $user->id ? 'selected' : '' }}>{{ $user->name }}</option>
-                  @endforeach
-                </select>
+                @if ($isAdmin)
+                  <select id="assigned_to" class="form-select form-select-sm border-0 p-0 custom-select">
+                    <option value="">Select a user</option>
+                    @foreach ($users as $user)
+                      <option value="{{ $user->id }}" {{ $ticket->assigned_to == $user->id ? 'selected' : '' }}>{{ $user->name }}</option>
+                    @endforeach
+                  </select>
+                @else
+                  @php
+                    $assignedUser = collect($users)->firstWhere('id', $ticket->assigned_to);
+                  @endphp
+                  @if ($assignedUser)
+                    <p class="mb-0">{{ $assignedUser->name }}</p>
+                  @else
+                    <p class="mb-0">-</p>
+                  @endif
+                @endif
               </div>
             </div>
             <div class="row my-3">
               <div class="col-sm-3 d-flex text-muted"  style="flex-shrink: 0;">
-                <i class="bx bx-user me-3"></i>
+                <i class="bx bx-cog me-3"></i>
                 <span>Problem</span>
               </div>
               <div class="col-sm-8">
-                <select id="problem_id" class="form-select form-select form-select-sm border-0 p-0 custom-select">
-                  <option value="">Select Problem</option>
-                  @foreach ($problems as $problem)
-                    <option value="{{ $problem->id }}" {{ $ticket->problem_id == $problem->id ? 'selected' : '' }}>{{ $problem->name }}</option>
-                  @endforeach
-                </select>
+                @if ($isAdmin)
+                  <select id="problem_id" class="form-select form-select-sm border-0 p-0 custom-select">
+                    <option value="">Select Problem</option>
+                    @foreach ($problems as $problem)
+                      <option value="{{ $problem->id }}" {{ $ticket->problem_id == $problem->id ? 'selected' : '' }}>{{ $problem->name }}</option>
+                    @endforeach
+                  </select>
+                @else
+                  <p class="mb-0">{{ $ticket->problem->name ?? '-' }}</p>
+                @endif
               </div>
             </div>
             <div class="row my-3">
               <div class="col-sm-3 d-flex text-muted"  style="flex-shrink: 0;">
-                <i class="bx bx-user me-3"></i>
+                <i class="bx bx-laptop me-3"></i>
                 <span>Application</span>
               </div>
               <div class="col-sm-8">
-                <select id="application_id" class="form-select form-select form-select-sm border-0 p-0 custom-select">
-                  <option value="">Select Application</option>
-                  @foreach ($applications as $application)
-                    <option value="{{ $application->id }}" {{ $ticket->application_id == $application->id ? 'selected' : '' }}>{{ $application->name }}</option>
-                  @endforeach
-                </select>
+                @if ($isAdmin)
+                  <select id="application_id" class="form-select form-select-sm border-0 p-0 custom-select">
+                    <option value="">Select Application</option>
+                    @foreach ($applications as $application)
+                      <option value="{{ $application->id }}" {{ $ticket->application_id == $application->id ? 'selected' : '' }}>{{ $application->name }}</option>
+                    @endforeach
+                  </select>
+                @else
+                  <p class="mb-0">{{ $ticket->application->name ?? '-' }}</p>
+                @endif
               </div>
             </div>
             <div class="row my-3">
               <div class="col-sm-3 d-flex text-muted"  style="flex-shrink: 0;">
-                <i class="bx bx-user me-3"></i>
+                <i class="bx bx-objects-vertical-bottom me-3"></i>
                 <span>Priority</span>
               </div>
               <div class="col-sm-8">
-                <select id="priority" name="priority" class="form-select form-select-sm border-0 p-0 custom-select">
-                  <option value="">Pilih Prioritas</option>
-                  <option value="low" {{ (old('priority', $ticket->priority ?? '') == 'low') ? 'selected' : '' }}>Low</option>
-                  <option value="middle" {{ (old('priority', $ticket->priority ?? '') == 'middle') ? 'selected' : '' }}>Middle</option>
-                  <option value="high" {{ (old('priority', $ticket->priority ?? '') == 'high') ? 'selected' : '' }}>High</option>
-                </select>
+                @if ($isAdmin)
+                  <select id="priority" name="priority" class="form-select form-select-sm border-0 p-0 custom-select">
+                    <option value="">Pilih Prioritas</option>
+                    <option value="low" {{ (old('priority', $ticket->priority ?? '') == 'low') ? 'selected' : '' }}>Low</option>
+                    <option value="middle" {{ (old('priority', $ticket->priority ?? '') == 'middle') ? 'selected' : '' }}>Middle</option>
+                    <option value="high" {{ (old('priority', $ticket->priority ?? '') == 'high') ? 'selected' : '' }}>High</option>
+                  </select>
+                @else
+                  <p class="mb-0 text-capitalize">{{ $ticket->priority ?? '-' }}</p>
+                @endif
               </div>
             </div>
             <div class="row my-3">
@@ -201,6 +227,10 @@
     <div class="bg-white rounded-3 p-3 shadow-sm d-flex flex-column gap-2">
       <div class="d-flex justify-content-between gap-2">
         <!-- Button untuk Review -->
+        <?php
+          $user = session('auth_user');
+        ?>
+        @if ($user['role'] === 'admin')
         <button type="button" id="btnReview"
           class="btn d-flex align-items-center justify-content-center gap-2 w-100
             {{ $ticket->status === 'open' ? 'btn-primary' : ($ticket->status === 'onprogress' ? 'btn-primary' : 'btn-primary') }}"
@@ -208,25 +238,24 @@
           <i class="fas fa-search"></i>
           <span>Review</span>
         </button>
-
-        <!-- Tombol Konfirmasi -->
-        <button type="button" id="btnKonfirmasi"
-          class="btn d-flex align-items-center justify-content-center gap-2 w-100
-            {{ $ticket->status === 'open' ? 'btn-primary' : ($ticket->status === 'onprogress' ? 'btn-primary' : 'btn-primary') }}"
-          {{ ($ticket->status === 'open' || $ticket->status === 'resolved') ? 'disabled' : '' }}>
-          <i class="fas fa-check"></i>
-          <span>Konfirmasi</span>
-        </button>
-
-      </div>
-        <!-- Tombol Dalam Progres -->
         <button type="button" id="btnProgress"
           class="btn d-flex align-items-center justify-content-center gap-2 w-100
             {{ $ticket->status === 'open' ? 'btn-primary' : ($ticket->status === 'onprogress' ? 'btn-primary' : 'btn-primary') }}"
           {{($ticket->status === 'onprogress' || $ticket->status === 'resolved') ? 'disabled' : '' }}>
           <i class="fas fa-spinner fa-spin"></i>
-          <span>Dalam Progres</span>
+          <span>On Progress</span>
         </button>
+        @elseif ($user['role'] === 'user')
+          <!-- Tombol Revisi untuk User -->
+          <button type="button" id="btnRevisi"
+            class="btn btn-warning d-flex align-items-center justify-content-center gap-2 w-100"
+            {{ $ticket->status !== 'resolved' ? 'disabled' : '' }}>
+            <i class="fas fa-edit"></i>
+            <span>Ajukan Revisi</span>
+          </button>
+        @endif
+      </div>
+        <!-- Tombol Dalam Progres -->
     </div>
 
     <div class="bg-white rounded-3 p-3 shadow-sm" style="min-height:120px;">
@@ -297,34 +326,66 @@
     });
   });
 
-  $('#btnKonfirmasi').on('click', function () {
+  $('#btnReview').on('click', function () {
+  const assignedTo = $('#assigned_to').val();
+  const applicationId = $('#application_id').val();
+  const problemId = $('#problem_id').val();
+  const priority = $('#priority').val();
+  const apiUrl = "{{config('api.base_url')}}/tickets";
+  const ticketCode = encodeURIComponent("{{$ticket->ticket_code}}");
+
+  $.ajax({
+    url: `${apiUrl}/${ticketCode}`,
+    method: 'PUT',
+    beforeSend: function (xhr) {
+      addAuthorizationHeader(xhr);
+    },
+    data: {
+      status: 'resolved',
+      assigned_to: assignedTo,
+      application_id: applicationId,
+      problem_id: problemId,
+      priority: priority
+    },
+    success: function (response) {
+      console.log('Tiket direview:', response);
+      location.reload();
+    },
+    error: function (xhr) {
+      console.error('Gagal review:', xhr.responseText);
+      alert('Gagal mereview tiket.');
+    }
+  });
+  });
+
+  $('#btnRevisi').on('click', function () {
     const assignedTo = $('#assigned_to').val();
     const applicationId = $('#application_id').val();
     const problemId = $('#problem_id').val();
     const priority = $('#priority').val();
-    let apiUrl = "{{config('api.base_url')}}/tickets";
+    const apiUrl = "{{config('api.base_url')}}/tickets";
     const ticketCode = encodeURIComponent("{{$ticket->ticket_code}}");
 
     $.ajax({
-      url: apiUrl + "/" + ticketCode,
+      url: `${apiUrl}/${ticketCode}`,
       method: 'PUT',
-      beforeSend: function(xhr){
-        addAuthorizationHeader(xhr)
+      beforeSend: function (xhr) {
+        addAuthorizationHeader(xhr);
       },
       data: {
-        status: 'resolved',
+        status: 'revition',
         assigned_to: assignedTo,
         application_id: applicationId,
         problem_id: problemId,
         priority: priority
       },
       success: function (response) {
-        console.log('Update berhasil:', response);
+        console.log('Revisi diajukan:', response);
         location.reload();
       },
       error: function (xhr) {
-        console.error('Gagal update:', xhr.responseText);
-        alert('Gagal mengupdate tiket. Cek console untuk detail.');
+        console.error('Gagal revisi:', xhr.responseText);
+        alert('Gagal mengirim revisi.');
       }
     });
   });

@@ -13,7 +13,7 @@ return new class extends Migration
     {
       Schema::create('discussions', function (Blueprint $table) {
         $table->id();
-        $table->unsignedBigInteger('ticket_code');
+        $table->string('ticket_code');
         $table->unsignedBigInteger('user_id');
         $table->text('message');
         $table->timestamps();

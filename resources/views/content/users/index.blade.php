@@ -121,7 +121,7 @@
               <select class="form-select" id="editUserStatus" aria-label="Default select example">
                 <option selected>Pilih Status</option>
                 <option value="active">Active</option>
-                <option value="non active">Non Active</option>
+                <option value="non-active">Non Active</option>
               </select>
               <div class="invalid-feedback" id="error-edit-status"></div>
             </div>
@@ -345,12 +345,9 @@
                         icon: 'success',
                         allowOutsideClick: false,
                         confirmButtonText: 'OK'
-                    }).then(() => {
-                        $('#loading').show(),
-                        setTimeout(() => {
-                          location.reload();
-                        }, 1000);
-                    });
+                    }).then(() =>
+                    location.reload(),
+                  );
 
                   },
                   error: function () {

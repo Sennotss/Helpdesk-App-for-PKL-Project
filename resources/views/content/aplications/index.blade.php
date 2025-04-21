@@ -91,7 +91,7 @@
               <select class="form-select" id="editAppStatus" aria-label="Default select example">
                 <option selected>Pilih Status</option>
                 <option value="active">Active</option>
-                <option value="non active">Non Active</option>
+                <option value="non-active">Non Active</option>
                 <option value="maintenance">Maintenance</option>
               </select>
               <div class="invalid-feedback" id="error-edit-status"></div>
@@ -136,7 +136,7 @@
 
           if(application.status === 'active') {
             statusBadge = '<span class="badge bg-label-primary me-1">Active</span>';
-          } else if (application.status === 'nonactive') {
+          } else if (application.status === 'non-active') {
             statusBadge = '<span class="badge bg-label-danger me-1">Non Active</span>';
           } else if (application.status === 'maintenance') {
             statusBadge = '<span class="badge bg-label-warning me-1">Maintenance</span>';

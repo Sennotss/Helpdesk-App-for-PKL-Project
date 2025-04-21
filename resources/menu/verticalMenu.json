@@ -8,8 +8,8 @@
       "submenu": [
         {
           "url": "/dashboard",
-          "name": "Analytics",
-          "slug": "dashboard-analytics"
+          "name": "Dashboards",
+          "slug": "dashboard-admin"
         }
       ]
     },
@@ -23,10 +23,10 @@
       "slug": "tickets"
     },
     {
-      "url": "/",
+      "url": "/schedules",
       "icon": "menu-icon tf-icons bx bx-calendar",
-      "name": "Jadwal",
-      "slug": "jadwal"
+      "name": "Schedules",
+      "slug": "schedules"
     },
     {
       "menuHeader": "Master Data"

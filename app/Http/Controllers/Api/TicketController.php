@@ -17,7 +17,7 @@ class TicketController extends Controller
      */
     public function index()
     {
-        $tickets = Ticket::with(['images', 'links', 'user', 'problem', 'application'])->get();
+        $tickets = Ticket::with(['images', 'links', 'user', 'problem', 'application'])->orderBy('created_at', 'desc')->get();
 
         return ApiResponse::success($tickets);
     }
@@ -111,7 +111,7 @@ class TicketController extends Controller
     public function updateTicket(Request $request, $ticket_code)
     {
       $validator = Validator::make($request->all(), [
-        'status' => 'nullable|in:open,onprogress,resolved',
+        'status' => 'nullable|in:open,onprogress,resolved,revition',
         'assigned_to' => 'nullable|exists:users,id',
         'application_id' => 'nullable|exists:applications,id',
         'problem_id' => 'nullable|exists:problems,id',

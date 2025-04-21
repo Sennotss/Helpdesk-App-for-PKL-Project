@@ -2,6 +2,7 @@
 
   use App\Http\Controllers\Api\AuthController;
   use App\Http\Controllers\Api\ProblemController;
+  use App\Http\Controllers\Api\ScheduleController;
   use Illuminate\Http\Request;
   use Illuminate\Support\Facades\Route;
   use App\Http\Controllers\Api\UserController;
@@ -43,6 +44,7 @@
         Route::get('problems/{id_problem}', [ProblemController::class,'show'])->name('getAppById');
         Route::PUT('problems/{id_problem}', [ProblemController::class,'update'])->name('putApp');
 
+
       });
 
       Route::middleware('role:user')->group(function () {
@@ -59,6 +61,12 @@
 
         Route::get('tickets/{ticket_code}/discussions', [DiscussionController::class, 'index']);
         Route::post('tickets/{ticket_code}/discussions', [DiscussionController::class, 'store']);
+
+        Route::get('/schedules', [ScheduleController::class, 'index'])->name('getSchedule');
+        Route::post('/schedules', [ScheduleController::class, 'store'])->name('postSchedule');
+        Route::put('/schedules/{id}', [ScheduleController::class, 'update'])->name('putSchedule');
+
+        Route::post('/logout', [AuthController::class,'logout'])->name('logout');
   });
 
   Route::post('/telegram/webhook', [TelegramWebhookController::class, 'handle']);

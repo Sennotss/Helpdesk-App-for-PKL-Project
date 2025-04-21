@@ -191,7 +191,7 @@
       });
     });
 
-    $("#saveApplicationEdit").click(function (e) {
+    $("#saveProblemEdit").click(function (e) {
       e.preventDefault();
 
       const problemId = $("#editProblemId").val();

@@ -1,9 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\dashboard\Analytics;
+use App\Http\Controllers\dashboard\DashboardController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\TicketWebController;
+use App\Http\Controllers\ScheduleController;
 use Illuminate\Http\Request;
 
 Route::get('/login', [
@@ -17,9 +18,7 @@ Route::post('/store-token', function (Request $request) {
 });
 
 Route::middleware(['check.token'])->group(function () {
-  Route::get('/dashboard', function () {
-      return view('content.dashboard.dashboards-analytics');
-  })->name('dashboard');
+  Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
   Route::get('users', function () {
     return view('content.users.index');
@@ -38,6 +37,8 @@ Route::middleware(['check.token'])->group(function () {
   })->name('tickets');
 
   Route::get('tickets/detail/{ticket_code}', [TicketWebController::class, 'show'])->name('ticket');
+
+  Route::get('/schedules', [ScheduleController::class, 'index'])->name('schedules');
 });
 
 

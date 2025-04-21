@@ -8,4 +8,15 @@ use Illuminate\Database\Eloquent\Model;
 class HelpdeskSchedule extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+      'date',
+      'user_id',
+      'description'
+    ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

@@ -23,7 +23,7 @@ return new class extends Migration
             $table->text('description');
             $table->enum('status', ['open', 'onprogress', 'resolved', 'revition'])->default('open');
             $table->unsignedBigInteger('assigned_to')->nullable();
-            $table->enum('priority', ['low', 'middle', 'high']);
+            $table->enum('priority', ['low', 'middle', 'high'])->nullable();
             $table->string('via')->default('web');
             $table->timestamps();
 

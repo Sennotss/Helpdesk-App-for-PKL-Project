@@ -33,14 +33,6 @@ $navbarDetached = ($navbarDetached ?? '');
       @endif
 
       <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
-        <!-- Search -->
-        <div class="navbar-nav align-items-center">
-          <div class="nav-item d-flex align-items-center">
-            <i class="bx bx-search fs-4 lh-0"></i>
-            <input type="text" class="form-control border-0 shadow-none ps-1 ps-sm-2" placeholder="Search..." aria-label="Search...">
-          </div>
-        </div>
-        <!-- /Search -->
         <ul class="navbar-nav flex-row align-items-center ms-auto">
 
           <!-- User -->
@@ -85,7 +77,7 @@ $navbarDetached = ($navbarDetached ?? '');
                 <div class="dropdown-divider"></div>
               </li>
               <li>
-                <a class="dropdown-item" href="javascript:void(0);">
+                <a class="dropdown-item" id="logout-btn" href="javascript:void(0);">
                   <i class='bx bx-power-off me-2'></i>
                   <span class="align-middle">Log Out</span>
                 </a>
@@ -101,3 +93,46 @@ $navbarDetached = ($navbarDetached ?? '');
     @endif
   </nav>
   <!-- / Navbar -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script>
+    $('#logout-btn').click(function () {
+      const authToken = localStorage.getItem('auth_token');
+      const authUser = localStorage.getItem('auth_user');
+      const userRole = localStorage.getItem('user_role');
+
+      function addAuthorizationHeader(xhr) {
+        if (authToken) {
+            xhr.setRequestHeader('Authorization', 'Bearer ' + authToken);
+        }
+      }
+
+      if (!authToken) {
+        alert('Kamu sudah logout!');
+        return;
+      }
+
+      $.ajax({
+        url: '{{ config("api.base_url") }}/logout',
+        method: 'POST',
+        beforeSend: function(xhr){
+          addAuthorizationHeader(xhr)
+        },
+        success: function () {
+          localStorage.removeItem('auth_token');
+          localStorage.removeItem('auth_user');
+          localStorage.removeItem('user_role');
+          alert('Berhasil logout!');
+          window.location.href = '/login';
+          Swal.fire({
+            icon: 'success',
+            title: 'Berhasil!',
+            text: response.message,
+          });
+        },
+        error: function () {
+          alert('Gagal logout.');
+        }
+      });
+    });
+  </script>

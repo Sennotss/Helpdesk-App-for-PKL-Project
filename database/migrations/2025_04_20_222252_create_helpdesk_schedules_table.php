@@ -12,8 +12,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('helpdesk_schedules', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+          $table->id();
+          $table->date('date');
+          $table->foreignId('shift_pagi_user_id')->nullable()->constrained('users')->onDelete('set null');
+          $table->foreignId('shift_sore_user_id')->nullable()->constrained('users')->onDelete('set null');
+          $table->text('description')->nullable();
+          $table->timestamps();
         });
     }
 

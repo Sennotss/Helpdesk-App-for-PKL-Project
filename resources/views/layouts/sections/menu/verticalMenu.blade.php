@@ -17,7 +17,20 @@
   <div class="menu-inner-shadow"></div>
 
   <ul class="menu-inner py-1">
-    @foreach ($menuData[0]->menu as $menu)
+    @php
+      $userRole = session('auth_user')['role'] ?? 'user';
+
+      $filteredMenu = collect($menuData[0]->menu)->reject(function ($item) use ($userRole) {
+          // Jika user biasa
+          if ($userRole === 'user') {
+              return in_array($item->slug ?? '', ['schedules', 'users', 'applications', 'problems']) ||
+                    ($item->menuHeader ?? '') === 'Master Data';
+          }
+          return false;
+      });
+    @endphp
+
+    @foreach ($filteredMenu as $menu)
 
     {{-- adding active and open class if child is active --}}
 

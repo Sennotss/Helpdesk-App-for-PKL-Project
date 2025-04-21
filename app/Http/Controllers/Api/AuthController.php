@@ -27,4 +27,16 @@ class AuthController extends Controller
     ]);
   }
 
+  public function logout(Request $request)
+  {
+      $user = $request->user();
+
+      if ($user) {
+          $user->currentAccessToken()->delete();
+          return ApiResponse::success("Berhasil Logout");
+      }
+
+      return ApiResponse::unauthorized("Tidak ada user yang login");
+  }
+
 }
