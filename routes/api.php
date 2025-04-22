@@ -34,6 +34,7 @@
         Route::DELETE('users/{id_user}', [UserController::class,'destroy'])->name('deleteData');
 
         Route::get('/users', [UserController::class, 'index']);
+        Route::get('/users-datatables', [UserController::class, 'datatables']);
         Route::get('applications', [ApplicationController::class,'index'])->name('getApp');
         Route::post('applications', [ApplicationController::class,'store'])->name('postApp');
         Route::get('applications/{id_application}', [ApplicationController::class,'show'])->name('getAppById');

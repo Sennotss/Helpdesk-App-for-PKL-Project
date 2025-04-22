@@ -100,7 +100,7 @@
         </div>
         <div class="d-flex flex-column">
           <small class="text-muted mb-1">Jadwal Helpdesk</small>
-          <h6 class="mb-0" id="jadwal-helpdesk">{{ $shiftPagiUser->name }}</h6>
+          <h6 class="mb-0" id="jadwal-helpdesk">1. {{ $shiftPagiUser->name }} - 2. {{$shiftSoreUser->name}}</h6>
         </div>
       </div>
     </div>

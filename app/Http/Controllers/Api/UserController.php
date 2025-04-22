@@ -11,12 +11,23 @@ use Illuminate\Support\Facades\Validator;
 use App\Helpers\ApiResponse;
 use App\Enums\UserRole;
 use Illuminate\Validation\Rules\Enum;
+use Yajra\DataTables\Facades\DataTables;
 
 class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
+     public function datatables(Request $request)
+    {
+        if ($request->ajax()) {
+            $data = User::select(['id', 'name', 'email', 'role', 'status']);
+            return DataTables::of($data)->make(true);
+        }
+
+        return response()->json(['message' => 'Invalid request'], 400);
+    }
+    
     public function index()
     {
       $users = User::all();

@@ -2,10 +2,11 @@
 
   <!-- ! Hide app brand if navbar-full -->
   <div class="app-brand demo">
-    <a href="{{url('/')}}" class="app-brand-link">
+    <a href="{{url('/')}}" class="app-brand-link gap-1">
       {{-- <span class="app-brand-logo demo">
         @include('_partials.macros',["width"=>25,"withbg"=>'var(--bs-primary)'])
       </span> --}}
+      <img src="{{ asset('assets/logo/logo-removebg-preview.png') }}" alt="Logo" height="35">
       <span class="app-brand-text demo menu-text fw-bold ms-2 text-capitalize">Athena</span>
     </a>
 

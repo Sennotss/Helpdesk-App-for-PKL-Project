@@ -24,8 +24,8 @@ class DashboardController extends Controller
     $jadwalToday = HelpdeskSchedule::with('user') // Eager loading user
       ->whereDate('date', Carbon::today())
       ->first();;
-    $shiftPagiUser = $jadwalToday ? $jadwalToday->shift_pagi_user_id : null;
-    $shiftSoreUser = $jadwalToday ? $jadwalToday->shift_sore_user_id : null;
+    $shiftPagiUser = $jadwalToday ? User::find($jadwalToday->shift_pagi_user_id) : null;
+    $shiftSoreUser = $jadwalToday ? User::find($jadwalToday->shift_sore_user_id) : null;
 
     if ($role === 'admin') {
         return view('content.dashboard.dashboards', compact('total', 'open', 'onProgress', 'revisi', 'resolved', 'shiftPagiUser', 'shiftSoreUser'));
