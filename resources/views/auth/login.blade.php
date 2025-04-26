@@ -17,12 +17,12 @@
           <!-- Logo -->
           <div class="app-brand justify-content-center">
             <a href="{{url('/')}}" class="app-brand-link gap-2">
-              <span class="app-brand-logo demo">@include('_partials.macros',["width"=>25,"withbg"=>'var(--bs-primary)'])</span>
-              <span class="app-brand-text demo text-body fw-bold">{{config('variables.templateName')}}</span>
+              <img src="{{ asset('assets/logo/logo-removebg-preview.png') }}" alt="Logo" height="50">
+              {{-- <span class="app-brand-text demo text-body fw-bold">{{config('variables.templateName')}}</span> --}}
             </a>
           </div>
           <!-- /Logo -->
-          <h4 class="mb-2">Selamat datang di {{config('variables.templateName')}}! 👋</h4>
+          <h4 class="mb-2">Selamat datang di {{config('variables.templateName')}}!</h4>
           <p class="mb-4">Silakan masuk untuk melaporkan dan memantau kendala dengan lebih mudah.</p>
 
           <div id="error-message" class="alert alert-danger" style="display:none;"></div>
@@ -38,14 +38,6 @@
               <div class="input-group input-group-merge">
                 <input type="password" id="password" class="form-control" name="password" placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;" aria-describedby="password" />
                 <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
-              </div>
-            </div>
-            <div class="mb-3">
-              <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="remember-me">
-                <label class="form-check-label" for="remember-me">
-                  Remember Me
-                </label>
               </div>
             </div>
             <div class="mb-3">

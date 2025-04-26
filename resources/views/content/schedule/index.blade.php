@@ -25,17 +25,17 @@
               <td><input type="date" class="form-control schedule-date" value="{{ $schedule->date }}"></td>
                 <td>
                     <select class="form-control shift-pagi-select">
-                        @foreach ($users as $user)
-                            <option value="{{ $user->id }}" {{ $user->id == $schedule->user_id ? 'selected' : '' }}>
-                                {{ $user->name }}
-                            </option>
-                        @endforeach
+                      @foreach ($users as $user)
+                        <option value="{{ $user->id }}" {{ $user->id == $schedule->shift_pagi_user_id ? 'selected' : '' }}>
+                          {{ $user->name }}
+                        </option>
+                    @endforeach
                     </select>
                 </td>
                 <td>
                     <select class="form-control shift-sore-select">
                         @foreach ($users as $user)
-                            <option value="{{ $user->id }}" {{ $user->id == $schedule->user_id ? 'selected' : '' }}>
+                            <option value="{{ $user->id }}" {{ $user->id == $schedule->shift_sore_user_id ? 'selected' : '' }}>
                                 {{ $user->name }}
                             </option>
                         @endforeach
@@ -67,7 +67,7 @@
           let date = row.find('.schedule-date').val();
           let shiftPagiUserId = row.find('.shift-pagi-select').val();
           let shiftSoreUserId = row.find('.shift-sore-select').val();
-          let notes = row.find('.schedule-notes').val();
+          let notes = row.find('.description  ').val();
 
           $.ajax({
               url: apiUrl + (id ? '/' + id : ''),
@@ -76,21 +76,26 @@
                   addAuthorizationHeader(xhr)
               },
               data: {
-                  date: date,
-                  shift_pagi_user_id: shiftPagiUserId,
-                  shift_sore_user_id: shiftSoreUserId,
-                  notes: notes
+                date: date,
+                shift_pagi_user_id: shiftPagiUserId,
+                shift_sore_user_id: shiftSoreUserId,
+                description: notes
               },
               success: function(response) {
-                  alert('Jadwal berhasil disimpan!');
+                Swal.fire({
+                  icon: 'success',
+                  title: 'Jadwal berhasil diupdate!',
+                  text: response.message,
+                  confirmButtonText: 'OK'
+                }).then(() =>
+                  location.reload());
 
-                  // Update data-id supaya bisa di-update selanjutnya
-                  if (!id && response.data && response.data.id) {
-                      row.attr('data-id', response.data.id);
-                  }
+                if (!id && response.data && response.data.id) {
+                    row.attr('data-id', response.data.id);
+                }
               },
               error: function() {
-                  alert('Terjadi kesalahan saat menyimpan jadwal');
+                alert('Terjadi kesalahan saat menyimpan jadwal');
               }
           });
       });

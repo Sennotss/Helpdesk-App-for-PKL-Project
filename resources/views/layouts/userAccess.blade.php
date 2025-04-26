@@ -1,7 +1,7 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
   const user = JSON.parse(localStorage.getItem('auth_user'));
-  const allowedRoles = ['admin']; // role yang boleh akses halaman ini
+  const allowedRoles = ['admin'];
 
   if (!user || !allowedRoles.includes(user.role)) {
     Swal.fire({

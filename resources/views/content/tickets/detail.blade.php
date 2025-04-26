@@ -197,7 +197,7 @@
           @if ($authUser && $discussion->user_id == $authUser['id'])
               {{-- Pesan dari user yang sedang login (kanan) --}}
               <div class="chat-message-wrapper flex-grow-1 text-end">
-                  <div class="chat-message-text bg-primary text-white p-2 rounded d-inline-block">
+                  <div class="chat-message-text bg-info text-white p-2 rounded d-inline-block">
                       <p class="mb-0">{{ $discussion->message }}</p>
                   </div>
                   <small class="text-muted d-block">{{ $discussion->created_at->diffForHumans() }}</small>
@@ -277,7 +277,6 @@
     </div>
   </div>
 </div>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
   document.querySelectorAll('.image-link').forEach(link => {
     link.addEventListener('click', function () {
@@ -357,7 +356,6 @@
     }
   });
   });
-
   $('#btnRevisi').on('click', function () {
     const assignedTo = $('#assigned_to').val();
     const applicationId = $('#application_id').val();

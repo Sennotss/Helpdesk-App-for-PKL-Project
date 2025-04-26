@@ -4,6 +4,72 @@
 
 @section('content')
 @include('layouts.page-title')
+<style>
+  /* Mengatur tampilan header tabel */
+table.dataTable thead th {
+    background-color: #f4f6f9;
+    color: #6c757d;
+    font-weight: 600;
+    text-align: center;
+}
+
+/* Menambahkan padding dan border yang lebih halus pada sel */
+table.dataTable td, table.dataTable th {
+    padding: 12px 18px;
+    border-bottom: 1px solid #ddd;
+}
+
+/* Menambahkan efek hover pada baris tabel */
+table.dataTable tbody tr:hover {
+    background-color: #f9f9f9;
+    cursor: pointer;
+}
+
+/* Styling untuk Badge Status */
+.badge {
+    border-radius: 12px;
+    padding: 5px 10px;
+    font-size: 12px;
+}
+
+.badge-primary {
+    background-color: #007bff;
+    color: white;
+}
+
+.badge-warning {
+    background-color: #ffc107;
+    color: white;
+}
+
+.badge-success {
+    background-color: #28a745;
+    color: white;
+}
+
+.badge-danger {
+    background-color: #dc3545;
+    color: white;
+}
+
+/* Styling tombol DataTable */
+div.dataTables_wrapper .dataTables_length select,
+div.dataTables_wrapper .dataTables_filter input {
+    border-radius: 8px;
+    padding: 5px 10px;
+}
+
+.dataTables_paginate .paginate_button {
+    border-radius: 50px;
+    padding: 5px 10px;
+}
+
+.dataTables_paginate .paginate_button:hover {
+    background-color: #007bff;
+    color: white;
+}
+
+</style>
 <div class="card">
   <div class="card-header d-flex justify-content-between align-items-center">
     {{-- <div class="demo-inline-spacing"> --}}
@@ -11,7 +77,7 @@
       <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ticketModal">Add Data</button>
   </div>
   <div class="table-responsive text-nowrap">
-    <table class="table table-striped">
+    <table class="table table-striped" id="ticketTable">
       <thead>
         <tr>
           <th>Code</th>
@@ -22,11 +88,11 @@
           <th>Aksi</th>
         </tr>
       </thead>
-      <tbody class="table-border-bottom-0" id='ticketTable'>
+      <tbody class="table-border-bottom-0">
       </tbody>
     </table>
   </div>
-  @include('components.loading')
+  {{-- @include('components.loading') --}}
   <div class="modal fade" id="ticketModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
@@ -85,8 +151,6 @@
     </div>
   </div>
 </div>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
   $(document).ready(function(){
     const authToken = localStorage.getItem('auth_token');
@@ -99,55 +163,63 @@
 
     $('#loading').show();
     let apiUrl = "{{config('api.base_url')}}/tickets";
-    $.ajax({
-    url: apiUrl,
-    method: 'GET',
-    beforeSend: function(xhr){
-      addAuthorizationHeader(xhr)
-    },
-    success: function (data) {
-      console.log(data)
-      $('#loading').hide();
-      let html = '';
-      if (data.length === 0) {
-        html = `<tr><td colspan="6" class="text-center">Tidak ada data Ticket</td></tr>`;
-      } else {
-        data.data.forEach((ticket) => {
-          let statusBadge = '';
-
-          if(ticket.status === 'open') {
-            statusBadge = '<span class="badge bg-label-primary me-1">Open</span>';
-          } else if (ticket.status === 'onprogress') {
-            statusBadge = '<span class="badge bg-label-warning me-1">On Progress</span>';
-          } else if (ticket.status === 'resolved') {
-            statusBadge = '<span class="badge bg-label-success me-1">Resolved</span>';
-          } else if (ticket.status === 'revition') {
-            statusBadge = '<span class="badge bg-label-danger me-1">Revisi</span>';
+    const table = $('#ticketTable').DataTable({
+      "processing": true,
+      "ajax": {
+        "url": apiUrl,
+        "type": "GET",
+        "beforeSend": function(xhr){
+          addAuthorizationHeader(xhr);
+        },
+        "dataSrc": function (data) {
+          let tableData = [];
+          if (data.length === 0) {
+            tableData = [
+              `<tr><td colspan="6" class="text-center">Tidak ada data Ticket</td></tr>`
+            ];
           } else {
-            statusBadge = '<span class="badge bg-label-secondary me-1">Unknown</span>';
+            data.data.forEach((ticket) => {
+              let statusBadge = '';
+
+              if(ticket.status === 'open') {
+                statusBadge = '<span class="badge bg-label-primary me-1">Open</span>';
+              } else if (ticket.status === 'onprogress') {
+                statusBadge = '<span class="badge bg-label-warning me-1">On Progress</span>';
+              } else if (ticket.status === 'resolved') {
+                statusBadge = '<span class="badge bg-label-success me-1">Resolved</span>';
+              } else if (ticket.status === 'revition') {
+                statusBadge = '<span class="badge bg-label-danger me-1">Revisi</span>';
+              } else {
+                statusBadge = '<span class="badge bg-label-secondary me-1">Unknown</span>';
+              }
+
+              tableData.push([
+                ticket.ticket_code,
+                ticket.client,
+                ticket.issue,
+                ticket.user_id,
+                statusBadge,
+                `<button type="button" class="btn btn-info btn-sm px-1" data-code="${ticket.ticket_code}" id="ticketDetail"><i class="bx bx-chevron-right"></i></button>`
+              ]);
+            });
           }
-
-          html += `
-            <tr>
-              <td>${ticket.ticket_code}</td>
-              <td>${ticket.client}</td>
-              <td>${ticket.issue}</td>
-              <td>${ticket.user_id}</td>
-              <td>${statusBadge}</td>
-              <td>
-                <button type="button" class="btn btn-info btn-sm px-1" data-code="${ ticket.ticket_code }" id="ticketDetail"><i class="bx bx-chevron-right"></i></button>
-              </td>
-            </tr>`;
-        });
-      }
-
-      $('#ticketTable').html(html);
-    },
-    error: function (xhr) {
-      console.error(xhr.responseText);
-      Swal.fire('Error', 'Gagal memuat data Ticket.', 'error');
-    }
-  });
+          return tableData;
+        }
+      },
+      "columns": [
+        { "data": 0 },
+        { "data": 1 },
+        { "data": 2 },
+        { "data": 3 },
+        { "data": 4 },
+        { "data": 5 }
+      ],
+      "order": [[0, 'desc']], // Optional: to order by ticket_code by default
+      "pageLength": 10, // Optional: to set default page length
+      "searching": true, // Enable search
+      "lengthChange": false, // Disable length change (you can enable it if you prefer)
+      "paging": true, // Enable pagination
+    });
 
   $(document).on('click', '#ticketDetail', function () {
     let ticketCode = $(this).data('code');
@@ -201,7 +273,7 @@
           addAuthorizationHeader(xhr)
         },
         success: function (response) {
-          $("#userModal").modal("hide");
+          $("#ticketModal").modal("hide");
           Swal.fire({
             icon: 'success',
             title: 'Berhasil!',

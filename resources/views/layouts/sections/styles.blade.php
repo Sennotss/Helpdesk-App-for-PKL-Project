@@ -12,6 +12,8 @@
 <link rel="stylesheet" href="{{ asset(mix('assets/css/demo.css')) }}" />
 <!-- Vendors CSS -->
 <link rel="stylesheet" href="{{ asset(mix('assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css')) }}" />
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" />
+<link href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css" rel="stylesheet" />
 <style>
   .swal2-container {
   z-index: 9999 !important;

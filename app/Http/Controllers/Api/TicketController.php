@@ -9,6 +9,7 @@ use App\Models\Ticket;
 use App\Models\TicketImages;
 use App\Models\TicketLinks;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Http;
 
 class TicketController extends Controller
 {

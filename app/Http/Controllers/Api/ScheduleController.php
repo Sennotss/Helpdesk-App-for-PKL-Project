@@ -18,8 +18,8 @@ class ScheduleController extends Controller
     {
         $validated = $request->validate([
             'date' => 'required|date',
-            'shift_pagi_user_id' => 'nullable|string',
-            'shift_sore_user_id' => 'nullable|string',
+            'shift_pagi_user_id' => 'nullable|exists:users,id',
+            'shift_sore_user_id' => 'nullable|exists:users,id',
             'description' => 'nullable|string',
         ]);
 
@@ -33,8 +33,8 @@ class ScheduleController extends Controller
 
         $validated = $request->validate([
             'date' => 'required|date',
-            'shift_pagi_user_id' => 'nullable|string',
-            'shift_sore_user_id' => 'nullable|string',
+            'shift_pagi_user_id' => 'nullable|exists:users,id',
+            'shift_sore_user_id' => 'nullable|exists:users,id',
             'description' => 'nullable|string',
         ]);
 

@@ -11,7 +11,8 @@ class HelpdeskSchedule extends Model
 
     protected $fillable = [
       'date',
-      'user_id',
+      'shift_pagi_user_id',
+      'shift_sore_user_id',
       'description'
     ];
 

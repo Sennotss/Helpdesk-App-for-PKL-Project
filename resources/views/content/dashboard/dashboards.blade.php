@@ -100,7 +100,11 @@
         </div>
         <div class="d-flex flex-column">
           <small class="text-muted mb-1">Jadwal Helpdesk</small>
-          <h6 class="mb-0" id="jadwal-helpdesk">1. {{ $shiftPagiUser->name }} - 2. {{$shiftSoreUser->name}}</h6>
+          @if (!$shiftPagiUser && !$shiftSoreUser)
+            <h6 class="mb-0">Tidak ada jadwal hari ini</h6>
+          @else
+            <h6 class="mb-0" id="jadwal-helpdesk">1. {{ $shiftPagiUser->name }} - 2. {{$shiftSoreUser->name}}</h6>
+          @endif
         </div>
       </div>
     </div>

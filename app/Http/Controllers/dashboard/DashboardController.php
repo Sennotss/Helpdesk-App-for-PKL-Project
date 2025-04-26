@@ -21,7 +21,7 @@ class DashboardController extends Controller
     $resolved = Ticket::where('status', 'resolved')->count();
 
     $jadwalCount = HelpdeskSchedule::count();
-    $jadwalToday = HelpdeskSchedule::with('user') // Eager loading user
+    $jadwalToday = HelpdeskSchedule::with('user')
       ->whereDate('date', Carbon::today())
       ->first();;
     $shiftPagiUser = $jadwalToday ? User::find($jadwalToday->shift_pagi_user_id) : null;

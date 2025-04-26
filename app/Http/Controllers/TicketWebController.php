@@ -18,9 +18,9 @@ class TicketWebController extends Controller
     $ticket = Ticket::with(['images', 'links', 'user', 'problem', 'application'])
         ->where('ticket_code', $ticket_code)
         ->first();
-    $users = User::all();
+    $users = User::where('role', 'admin')->where('status', 'active')->get();
     $problems = Problem::all();
-    $applications = Application::all();
+    $applications = Application::where('status', 'active')->get();
     $images = TicketImages::all();
     $links = TicketLinks::all();
     $discussions = Discussion::where('ticket_code', $ticket->ticket_code)->get();

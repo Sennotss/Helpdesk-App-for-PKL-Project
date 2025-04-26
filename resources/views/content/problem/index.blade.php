@@ -215,7 +215,6 @@
             text: response.message,
             confirmButtonText: 'OK'
           }).then(() =>
-          $('#loading').show(),
           location.reload());
         },
         error: function (xhr) {
