@@ -5,14 +5,6 @@
 @section('content')
 
 <style>
-  .custom-select {
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    background-image: none;
-    padding-right: 1.5em;
-  }
-
   .form-select-sm {
     font-size: 0.9rem;
   }
@@ -357,10 +349,16 @@
   });
   });
   $('#btnRevisi').on('click', function () {
-    const assignedTo = $('#assigned_to').val();
-    const applicationId = $('#application_id').val();
-    const problemId = $('#problem_id').val();
-    const priority = $('#priority').val();
+    const payload = {
+      status: 'revition',
+      assigned_to: "{{ $ticket->assigned_to }}",
+      application_id: "{{ $ticket->application_id }}",
+      problem_id: "{{ $ticket->problem_id }}",
+      priority: "{{ $ticket->priority }}"
+    };
+
+    console.log('Payload yang dikirim:', payload);
+
     const apiUrl = "{{config('api.base_url')}}/tickets";
     const ticketCode = encodeURIComponent("{{$ticket->ticket_code}}");
 
@@ -370,13 +368,7 @@
       beforeSend: function (xhr) {
         addAuthorizationHeader(xhr);
       },
-      data: {
-        status: 'revition',
-        assigned_to: assignedTo,
-        application_id: applicationId,
-        problem_id: problemId,
-        priority: priority
-      },
+      data: payload,
       success: function (response) {
         console.log('Revisi diajukan:', response);
         location.reload();

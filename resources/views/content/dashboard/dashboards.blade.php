@@ -2,18 +2,6 @@
 
 @section('title', 'Dashboard - Analytics')
 
-@section('vendor-style')
-<link rel="stylesheet" href="{{asset('assets/vendor/libs/apex-charts/apex-charts.css')}}">
-@endsection
-
-@section('vendor-script')
-<script src="{{asset('assets/vendor/libs/apex-charts/apexcharts.js')}}"></script>
-@endsection
-
-@section('page-script')
-<script src="{{asset('assets/js/dashboards-analytics.js')}}"></script>
-@endsection
-
 @section('content')
 <div class="row">
   <!-- Total Tickets -->
@@ -110,7 +98,6 @@
     </div>
   </div>
 </div>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
   const loginSuccess = localStorage.getItem('login_success');
 
