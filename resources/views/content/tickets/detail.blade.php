@@ -318,35 +318,56 @@
   });
 
   $('#btnReview').on('click', function () {
-  const assignedTo = $('#assigned_to').val();
-  const applicationId = $('#application_id').val();
-  const problemId = $('#problem_id').val();
-  const priority = $('#priority').val();
-  const apiUrl = "{{config('api.base_url')}}/tickets";
-  const ticketCode = encodeURIComponent("{{$ticket->ticket_code}}");
+    const assignedTo = $('#assigned_to').val();
+    const applicationId = $('#application_id').val();
+    const problemId = $('#problem_id').val();
+    const priority = $('#priority').val();
+    const apiUrl = "{{config('api.base_url')}}/tickets";
+    const ticketCode = encodeURIComponent("{{$ticket->ticket_code}}");
 
-  $.ajax({
-    url: `${apiUrl}/${ticketCode}`,
-    method: 'PUT',
-    beforeSend: function (xhr) {
-      addAuthorizationHeader(xhr);
-    },
-    data: {
-      status: 'resolved',
-      assigned_to: assignedTo,
-      application_id: applicationId,
-      problem_id: problemId,
-      priority: priority
-    },
-    success: function (response) {
-      console.log('Tiket direview:', response);
-      location.reload();
-    },
-    error: function (xhr) {
-      console.error('Gagal review:', xhr.responseText);
-      alert('Gagal mereview tiket.');
-    }
-  });
+    Swal.fire({
+      title: 'Konfirmasi Review Tiket',
+      text: "Anda yakin ingin menyelesaikan tiket ini?",
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Ya, Selesaikan!',
+      cancelButtonText: 'Batal'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        $.ajax({
+          url: `${apiUrl}/${ticketCode}`,
+          method: 'PUT',
+          beforeSend: function (xhr) {
+            addAuthorizationHeader(xhr);
+          },
+          data: {
+            status: 'resolved',
+            assigned_to: assignedTo,
+            application_id: applicationId,
+            problem_id: problemId,
+            priority: priority
+          },
+          success: function (response) {
+            Swal.fire(
+              'Berhasil!',
+              'Tiket telah berhasil diselesaikan.',
+              'success'
+            ).then(() => {
+              location.reload();
+            });
+          },
+          error: function (xhr) {
+            Swal.fire(
+              'Gagal!',
+              'Gagal menyelesaikan tiket: ' + xhr.responseText,
+              'error'
+            );
+          }
+        });
+      }
+    });
   });
   $('#btnRevisi').on('click', function () {
     const payload = {

@@ -49,7 +49,6 @@
     </table>
     <button class="btn btn-primary my-3" id="add-schedule-row">+ Tambah Jadwal</button>
 </div>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function() {
       const authToken = localStorage.getItem('auth_token');
