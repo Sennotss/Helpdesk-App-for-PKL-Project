@@ -1,6 +1,6 @@
 @extends('layouts/contentNavbarLayout')
 
-@section('title', 'Users')
+@section('title', 'Tickets  ')
 
 @section('content')
 @include('layouts.page-title')
@@ -157,7 +157,7 @@ div.dataTables_wrapper .dataTables_filter input {
 
     function addAuthorizationHeader(xhr) {
         if (authToken) {
-            xhr.setRequestHeader('Authorization', 'Bearer ' + authToken);
+          xhr.setRequestHeader('Authorization', 'Bearer ' + authToken);
         }
     }
 

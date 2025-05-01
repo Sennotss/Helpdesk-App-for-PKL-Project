@@ -15,7 +15,7 @@ class Kernel extends ConsoleKernel
     {
       $schedule->call(function () {
         TelegramHelper::sendTodaySchedule();
-      })->dailyAt('05.00');
+      })->everyMinute();
     }
 
     /**
