@@ -93,7 +93,7 @@
           <div class="row">
             <div class="col mb-3">
               <label for="nameBasic" class="form-label">Name</label>
-              <input type="text" id="editUserName" class="form-control"">
+              <input type="text" id="editUserName" class="form-control">
               <div class="invalid-feedback" id="error-edit-name"></div>
             </div>
           </div>
